@@ -79,8 +79,10 @@ const closeM=()=>$('md').classList.remove('on');$('md').onclick=e=>{if(e.target=
 const nz=s=>String(s).split('\n')[0].replace(/\s+/g,' ').trim().toLowerCase();
 const cln=v=>{if(typeof v!=='string')return v;v=v.replace(/\s+/g,' ').trim();const i=v.search(/[^\x00-\x7F\u2013\u2014\u2019\u00d7]/);if(i<=0)return v;return v.slice(0,i).replace(/[\s(/,–-]+$/,'').trim()||v};
 const typeRound=t=>{t=String(t||'').toLowerCase();return/outcome/.test(t)?'o':/endline|^end/.test(t)?'e':/baseline|^base/.test(t)?'b':''};
-// finds a column by XML name, group path (grp/name) or the form's English label (first line of the header)
-const mkCol=H=>{const c={};return n=>{if(n in c)return c[n];const l=LB[n]&&nz(LB[n]);return c[n]=H.find(h=>h===n)||H.find(h=>h.endsWith('/'+n))||(l&&(H.find(h=>nz(h)===l)||H.find(h=>nz(h).startsWith(l))))||null}};
+// Finds a column by XML name, group path, or English label. Matching is case-insensitive
+// and ignores spaces, underscores and punctuation so Kobo export header variations are handled.
+const normCol=s=>String(s??'').toLowerCase().replace(/[^a-z0-9/]/g,'');
+const mkCol=H=>{const c={};return n=>{if(n in c)return c[n];const target=normCol(n),label=LB[n]&&nz(LB[n]),labelN=label&&normCol(label);return c[n]=H.find(h=>normCol(h)===target)||H.find(h=>normCol(h).endsWith('/'+target))||(labelN&&(H.find(h=>normCol(h)===labelN)||H.find(h=>normCol(h).startsWith(labelN))))||null}};
 function parseWb(wb,which,fname){
  const sh=n=>{
   const s=wb.Sheets[n];
@@ -107,16 +109,29 @@ function parseWb(wb,which,fname){
   const id=R['_id'],mine=a=>main.length===1?a:a.filter(x=>x['_submission__id']==id),S=mine(st),T=mine(tc),vals={},arr={};
   for(const x of ROWS){const s=x[3];let v=null;
    if(s.startsWith('AVG:')){
-    const k=s.slice(4);
-    const isT=k.startsWith('tc_');
-    const C=isT?TC:SC;
-    const a=(isT?T:S)
-     .map(q=>{
-      const c=C(k);
-      return c ? q[c] : null;
-     })
-     .filter(q=>q!==null && q!=='' && !isNaN(Number(q)))
-     .map(Number);
+    const k=s.slice(4),isT=k.startsWith('tc_'),C=isT?TC:SC,respondents=isT?T:S;
+    // Some Kobo exports place the calculated score on the main survey row;
+    // others place one score per respondent in rep_student / rep_teacher.
+    const mainCol=M(k),mainValue=mainCol!=null?R[mainCol]:null;
+    const cleanNums=a=>a.map(q=>q==null?'':String(q).replace(/,/g,'').trim())
+      .filter(q=>q!==''&&!isNaN(Number(q))).map(Number);
+    let a=cleanNums(mainValue==null?[]:[mainValue]);
+    if(!a.length){
+     const respondentCol=C(k);
+     a=cleanNums(respondents.map(q=>respondentCol!=null?q[respondentCol]:null));
+    }
+    // If the expected repeat sheet name differs, search other workbook sheets
+    // for the score field and use the matching submission rows where possible.
+    if(!a.length){
+     const candidates=wb.SheetNames.filter(n=>isT?/teacher/i.test(n):/student/i.test(n));
+     for(const sn of candidates){
+      const rows=sh(sn);if(!rows.length)continue;
+      const col=mkCol(Object.keys(rows[0]))(k);if(col==null)continue;
+      const linked=rows.filter(q=>q['_submission__id']==id||q['_parent_index']==R['_index']||q['_parent_id']==id);
+      const use=linked.length?linked:(main.length===1?rows:[]);
+      a=cleanNums(use.map(q=>q[col]));if(a.length)break;
+     }
+    }
     if(a.length){arr[x[0]]=a;v=r1(avg(a))}
    }
    else{v=cln(pick(s));if(typeof v==='string'&&x[4]!=='c'&&v!==''&&!isNaN(v))v=+v}
