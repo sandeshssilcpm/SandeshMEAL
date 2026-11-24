@@ -82,12 +82,43 @@ const typeRound=t=>{t=String(t||'').toLowerCase();return/outcome/.test(t)?'o':/e
 // finds a column by XML name, group path (grp/name) or the form's English label (first line of the header)
 const mkCol=H=>{const c={};return n=>{if(n in c)return c[n];const l=LB[n]&&nz(LB[n]);return c[n]=H.find(h=>h===n)||H.find(h=>h.endsWith('/'+n))||(l&&(H.find(h=>nz(h)===l)||H.find(h=>nz(h).startsWith(l))))||null}};
 function parseWb(wb,which,fname){
- const sh=n=>{const s=wb.Sheets[n];return s?XLSX.utils.sheet_to_json(s,{defval:null}):[]};
- const main=sh(wb.SheetNames[0]),st=sh('rep_student'),tc=sh('rep_teacher'),cc=a=>a.length?mkCol(Object.keys(a[0])):()=>null,M=cc(main),SC=cc(st),TC=cc(tc);let out=[];
+ const sh=n=>{
+  const s=wb.Sheets[n];
+  return s ? XLSX.utils.sheet_to_json(s,{defval:null}) : [];
+ };
+ const findSheet=(...patterns)=>{
+  const sheet=wb.SheetNames.find(n=>patterns.some(p=>n.toLowerCase().includes(p)));
+  return sheet ? sh(sheet) : [];
+ };
+ const main=sh(wb.SheetNames[0]),
+       st=findSheet('rep_student','student'),
+       tc=findSheet('rep_teacher','teacher'),
+       cc=a=>a.length?mkCol(Object.keys(a[0])):()=>null,
+       M=cc(main),
+       SC=cc(st),
+       TC=cc(tc);
+ console.log('Sheet Names:', wb.SheetNames);
+ console.log('Student rows:', st.length);
+ console.log('Teacher rows:', tc.length);
+ if(st.length) console.log('Student columns:', Object.keys(st[0]));
+ if(tc.length) console.log('Teacher columns:', Object.keys(tc[0]));
+ let out=[];
  for(const R of main){const pick=n=>{const c=M(n);return c==null?null:R[c]},name=String(pick('school_name')||'').trim(),emis=String(pick('emis')||'').trim();if(!name&&!emis)continue;
   const id=R['_id'],mine=a=>main.length===1?a:a.filter(x=>x['_submission__id']==id),S=mine(st),T=mine(tc),vals={},arr={};
   for(const x of ROWS){const s=x[3];let v=null;
-   if(s.startsWith('AVG:')){const k=s.slice(4),isT=k.startsWith('tc_'),C=isT?TC:SC,a=(isT?T:S).map(q=>{const c=C(k);return c?q[c]:null}).filter(q=>typeof q==='number');if(a.length){arr[x[0]]=a;v=r1(avg(a))}}
+   if(s.startsWith('AVG:')){
+    const k=s.slice(4);
+    const isT=k.startsWith('tc_');
+    const C=isT?TC:SC;
+    const a=(isT?T:S)
+     .map(q=>{
+      const c=C(k);
+      return c ? q[c] : null;
+     })
+     .filter(q=>q!==null && q!=='' && !isNaN(Number(q)))
+     .map(Number);
+    if(a.length){arr[x[0]]=a;v=r1(avg(a))}
+   }
    else{v=cln(pick(s));if(typeof v==='string'&&x[4]!=='c'&&v!==''&&!isNaN(v))v=+v}
    if(v!==null&&v!==''&&v!==undefined)vals[x[0]]=v}
   out.push({key:emis||name.toLowerCase(),name,emis,district:pick('district'),muni:pick('municipality'),date:String(pick('today_date')||'').slice(0,10),type:String(pick('survey_type')||''),sub:String(R['_submission_time']||''),vals,arr,nS:S.length,nT:T.length,file:fname})}
