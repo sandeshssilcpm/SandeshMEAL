@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>School Survey Dashboard – Baseline & Endline (multi-school)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#1b2733;--mut:#5f6f7e;--line:#dde3ea;--pri:#0b5cab;--good:#17803d;--bad:#c0392b;--neu:#6b7785;--base:#0b5cab;--end:#e08a00;--th:#eef2f7;--up:#eef5fd;--wr:#fff7e6;--wl:#f1d28a;color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#10161d;--card:#18212b;--ink:#e6edf3;--mut:#9aa9b8;--line:#2b3947;--pri:#5aa9f0;--good:#4cc27a;--bad:#ef7b6d;--neu:#94a3b3;--base:#4a9be8;--end:#f0a63a;--th:#1f2b37;--up:#172636;--wr:#2b2414;--wl:#6b5a2a;color-scheme:dark}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);font:15px/1.5 system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(135deg,#093f78,#0b5cab);color:#fff;padding:26px 20px}
+.w{max-width:1100px;margin:0 auto}h1{margin:0 0 4px;font-size:25px}header p{margin:2px 0;opacity:.92}
+main{padding:20px}section{margin-bottom:24px}h2{font-size:19px;margin:0 0 10px;border-left:5px solid var(--pri);padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.k{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}.k b{display:block;font-size:24px;color:var(--pri)}.k span{color:var(--mut);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--th);font-size:12.5px;text-transform:uppercase;letter-spacing:.03em}td.n{text-align:right}
+.scroll{overflow-x:auto}.pend{color:var(--end);font-style:italic}.up{color:var(--good);font-weight:600}.dn{color:var(--bad);font-weight:600}.nt{color:var(--neu)}
+.ups{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}.u{border:2px dashed var(--pri);border-radius:10px;padding:14px;background:var(--up)}
+.u b{font-size:16px}.u input{margin-top:8px;max-width:100%}.st{font-size:13px;color:var(--mut);margin-top:6px}
+select,button{font:inherit;padding:7px 10px;border-radius:7px;border:1px solid var(--line);background:var(--card);color:var(--ink)}button{cursor:pointer;background:var(--pri);color:#fff;border:0}
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}.bar label{width:260px;font-size:13.5px}.bar .t{flex:1;background:var(--line);border-radius:5px;height:16px;overflow:hidden}
+.bar i{display:block;height:8px}.bar em{font-style:normal;width:120px;font-size:13px;font-variant-numeric:tabular-nums}
+.lg{font-size:13px;margin:4px 0 8px}.lg s{display:inline-block;width:12px;height:12px;border-radius:3px;margin:0 4px 0 12px;vertical-align:middle;text-decoration:none}
+.warn{background:var(--wr);border:1px solid var(--wl);border-radius:10px;padding:12px 16px;font-size:14px}ul{margin:6px 0 0 18px;padding:0}.note{font-size:13px;color:var(--mut)}
+tr.sc{cursor:pointer}tr.sc:hover{background:var(--th)}tr.on{outline:2px solid var(--pri)}
+footer{padding:20px;text-align:center;color:var(--mut);font-size:12.5px}
+@media(max-width:700px){.bar{flex-wrap:wrap}.bar label{width:100%}}
+@media print{.u,.noprint{display:none}}
+</style></head><body>
+<header><div class="w"><h1>School Survey Dashboard – Baseline & Endline</h1><p>Upload baseline and endline KoBoToolbox exports (one or many schools). Schools are matched by EMIS code (or school name if EMIS is missing).</p></div></header>
+<main class="w">
+<section><div class="ups">
+<div class="u"><b>1 · Baseline file(s)</b><br><span class="note">XLSX export, “all versions – labels”. You can select several files at once.</span><br><input type="file" id="fb" accept=".xlsx,.xls,.csv" multiple><div class="st" id="sb">No baseline loaded</div></div>
+<div class="u"><b>2 · Endline file(s)</b><br><span class="note">Same questionnaire, same export format.</span><br><input type="file" id="fe" accept=".xlsx,.xls,.csv" multiple><div class="st" id="se">No endline loaded</div></div></div>
+<p class="note">Files are read locally in your browser and are not uploaded anywhere. Only values present in the files are shown; nothing is estimated.</p></section>
+<div id="app" style="display:none">
+<section><h2>Schools</h2><div class="card scroll"><table id="sch"></table></div>
+<p><b>View:</b> <select id="sel"></select> <button class="noprint" onclick="print()">Print / PDF</button></p><p class="note" id="vnote"></p></section>
+<section><h2>Headline figures</h2><div class="grid" id="kpi"></div></section>
+<section><h2>Baseline vs Endline</h2><p class="lg">Change colours: <s style="background:var(--good)"></s>desired direction <s style="background:var(--bad)"></s>wrong way <s style="background:var(--neu)"></s>neutral / context</p><div id="tabs"></div></section>
+<section><h2>Satisfaction scores (0–100)</h2><div class="card" id="bars"></div></section>
+<section><h2>Data quality notes</h2><div class="warn" id="dq"></div></section></div>
+</main>
+<footer>All figures are read or directly calculated from the uploaded survey files.</footer>
+<script>
+const avg=a=>a.reduce((x,y)=>x+y,0)/a.length,r1=v=>Math.round(v*10)/10;
+// [label, unit, desired dir (1 up,-1 down,0 neutral), source, aggregation (s=sum, m=mean, c=categorical)]
+const SEC={
+"Education & enrolment":[["Total students enrolled","",0,"hs_total","s"],["Girls","",0,"Number of girls","s"],["Boys","",0,"Number of boys","s"],["Total teachers","",0,"hs_teach_total","s"],["Female teachers","",1,"Female teachers","s"],["Student attendance (days attended ÷ teaching days)","%",1,"ATT","m"],["SEE pass rate","%",1,"calculation_SEE_pass_Percentag","m"],["Drop-out rate","%",-1,"hs_dropout_rate","m"],["Students who dropped out","",-1,"Number of students who dropped out","s"],["Children with disabilities","",0,"Among total students, Number of children with disabilities","s"],["Fee per student (if charged)","NPR",-1,"If yes, How much is charged","m"],["Classrooms requested from GWT","",0,"How many classrooms has the school","s"]],
+"Water, sanitation & hygiene":[["Total taps","",1,"Number of Total tap points","s"],["Functional taps","",1,"Number of Functional tap","s"],["Functional taps share","%",1,"hs_tap_func_pct","m"],["Child-friendly taps","",1,"Number of Child-friendly tap","s"],["Handwashing stations with soap","",0,"Handwashing stations with soap","c"],["Greywater drainage connected to taps","",0,"Is there a drainage system","c"],["Drinking water tested","",0,"Is drinking water being tested","c"],["Boys’ toilets","",1,"Number of Boys' toilets","s"],["Girls’ toilets","",1,"Number of Girls' toilets","s"],["Disabled-access toilets","",1,"Number of Disabled-access toilets","s"],["Total toilets","",1,"hs_toilet_total","s"],["Non-functional toilets","",-1,"Non-Functional toilets","s"],["Students per boys’ toilet","",-1,"hs_boys_toilet_ratio","m"],["Students per girls’ toilet","",-1,"hs_girls_toilet_ratio","m"],["Toilet is disaster-resilient","",0,"Is the toilet disaster resilient","c"],["MHM facilities","",0,"Were MHM facilities","c"],["Colour-coded dustbins","",0,"Is there availability of colour-coded","c"]],
+"Governance & management":[["SMC members (total)","",0,"Total_SMC_Members","s"],["Women in SMC","",1,"Number of females in SMC","s"],["SMC meeting frequency","",0,"How often the SMC meeting","c"],["O&M fund available","",0,"Does the School have Operation and Maintenance","c"],["O&M fund amount","NPR",1,"Please mention the Specific Amount","s"],["Written maintenance plan (principal)","",0,"Does the school have a written maintenance plan","c"],["Basic disaster-risk-reduction training for staff","",0,"Basic training on Disaster","c"],["Child clubs","",1,"If yes, how many child clubs","s"]],
+"Satisfaction scores (0–100, form-calculated)":[["Students – classroom","",1,"AVG:st_classroom_score","m"],["Students – drinking water access","",1,"AVG:st_meets_water_access","m"],["Students – handwashing","",1,"AVG:st_meets_handwash_access","m"],["Students – toilets","",1,"AVG:st_toilet_score","m"],["Students – inclusion facilities","",1,"AVG:st_inclusionfacility_score","m"],["Teachers – overall satisfaction","",1,"AVG:tc_satisfaction_score","m"]]};
+const ROWS=Object.values(SEC).flat(),$=id=>document.getElementById(id);
+const D={b:{},e:{}},INFO={b:'',e:''};let sel='ALL';
+function parseWb(wb,which,fname){
+ const sh=n=>{const s=wb.Sheets[n];return s?XLSX.utils.sheet_to_json(s,{defval:null}):[]};
+ const main=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:null}),st=sh('rep_student'),tc=sh('rep_teacher');let out=[];
+ for(const R of main){const H=Object.keys(R),col=p=>H.find(h=>h===p)||H.find(h=>h.startsWith(p)),pick=p=>{const c=col(p);return c==null?null:R[c]};
+  const name=String(pick('School name')||'').trim(),emis=String(pick('EMIS code')||'').trim();if(!name&&!emis)continue;
+  const id=R['_id'],mine=a=>main.length===1?a:a.filter(x=>x['_submission__id']==id);
+  const S=mine(st),T=mine(tc),vals={},arr={};
+  for(const x of ROWS){const s=x[3];let v=null;
+   if(s==='ATT'){const a=pick('Number of days students attended'),t=pick('Total number of teaching days');if(typeof a==='number'&&t)v=r1(a/t*100)}
+   else if(s.startsWith('AVG:')){const k=s.slice(4),a=(k.startsWith('tc_')?T:S).map(q=>q[k]).filter(q=>typeof q==='number');if(a.length){arr[x[0]]=a;v=r1(avg(a))}}
+   else{v=pick(s);if(typeof v==='string')v=v.replace(/\s+/g,' ').trim()}
+   if(v!==null&&v!=='')vals[x[0]]=v}
+  out.push({key:emis||name.toLowerCase(),name,emis,district:pick('District'),muni:pick('Municipality'),date:String(pick('Survey date')||'').slice(0,10),type:String(pick('Survey type')||''),sub:String(R['_submission_time']||''),vals,arr,nS:S.length,nT:T.length,file:fname})}
+ return out}
+async function load(which,files){let n=0,dup=0,mis=0;D[which]={};
+ for(const f of files){try{const wb=XLSX.read(await f.arrayBuffer());for(const r of parseWb(wb,which,f.name)){const o=D[which][r.key];if(o){dup++;if(o.sub>=r.sub)continue}else n++;D[which][r.key]=r;
+  if(which==='b'&&/end/i.test(r.type)&&!/base/i.test(r.type))mis++;if(which==='e'&&/base/i.test(r.type)&&!/end/i.test(r.type))mis++}}catch(e){INFO[which]='Could not read '+f.name+': '+e.message;$(which==='b'?'sb':'se').textContent=INFO[which];return}}
+ $(which==='b'?'sb':'se').textContent=`${n} school(s) loaded from ${files.length} file(s)`+(dup?` · ${dup} duplicate submission(s) found – latest kept`:'')+(mis?` · ⚠ ${mis} record(s) have a survey type that doesn’t match this upload slot`:'');
+ render()}
+$('fb').onchange=e=>load('b',[...e.target.files]);$('fe').onchange=e=>load('e',[...e.target.files]);
+function view(){const bk=Object.keys(D.b),ek=Object.keys(D.e);let keys;
+ if(sel!=='ALL')keys=[sel];else{const m=bk.filter(k=>D.e[k]);keys=ek.length&&bk.length?(m.length?m:[...new Set([...bk,...ek])]):[...new Set([...bk,...ek])]}
+ return{b:keys.map(k=>D.b[k]).filter(Boolean),e:keys.map(k=>D.e[k]).filter(Boolean),keys}}
+function agg(recs,x){if(!recs.length)return null;const[l,,,s,a]=x;
+ if(s.startsWith('AVG:')){const p=recs.flatMap(r=>r.arr[l]||[]);return p.length?r1(avg(p)):null}
+ const v=recs.map(r=>r.vals[l]).filter(q=>q!==undefined);if(!v.length)return null;
+ if(a==='c'){if(recs.length===1)return v[0];const t={};v.forEach(q=>t[q]=(t[q]||0)+1);return Object.entries(t).map(([k,c])=>k+' ×'+c).join('; ')}
+ const nn=v.filter(q=>typeof q==='number');if(!nn.length)return v[0];return a==='s'?nn.reduce((p,q)=>p+q,0):r1(avg(nn))}
+const fm=(v,u)=>v==null?'':typeof v==='number'?v.toLocaleString('en-US')+(u==='%'?'%':u==='NPR'?' NPR':''):v;
+function render(){const B=Object.keys(D.b),E=Object.keys(D.e);if(!B.length&&!E.length)return;$('app').style.display='block';
+ const all=[...new Set([...B,...E])],nm=k=>(D.b[k]||D.e[k]).name;
+ $('sel').innerHTML='<option value="ALL">All schools (network view)</option>'+all.map(k=>`<option value="${k}">${nm(k)}</option>`).join('');if(!all.includes(sel))sel='ALL';$('sel').value=sel;$('sel').onchange=()=>{sel=$('sel').value;render()};
+ let t='<tr><th>School</th><th>Location</th><th>Baseline</th><th>Endline</th><th>Status</th></tr>';
+ for(const k of all){const b=D.b[k],e=D.e[k],r=b||e;t+=`<tr class="sc ${sel===k?'on':''}" data-k="${k}"><td><b>${r.name}</b><br><span class="note">EMIS ${r.emis||'n/a'}</span></td><td>${[r.muni,r.district].filter(Boolean).join(', ')}</td><td>${b?'✓ '+b.date:'<span class="pend">Pending</span>'}</td><td>${e?'✓ '+e.date:'<span class="pend">Pending</span>'}</td><td>${b&&e?'Matched':'Only '+(b?'baseline':'endline')}</td></tr>`}
+ $('sch').innerHTML=t;document.querySelectorAll('tr.sc').forEach(tr=>tr.onclick=()=>{sel=tr.dataset.k;render()});
+ const V=view();let vn=sel==='ALL'?`Network view of ${V.keys.length} school(s): counts are totals; percentages, ratios and fees are the simple average of schools; satisfaction scores are pooled across all respondents.`+(B.length&&E.length?' Only schools present in both baseline and endline are compared (when any match).':''):`Showing ${nm(sel)}.`;$('vnote').textContent=vn;
+ const ag=(rs,l)=>agg(rs,ROWS.find(x=>x[0]===l));
+ $('kpi').innerHTML=[["Schools",V.b.length+' / '+V.e.length,'baseline / endline'],["Students enrolled","Total students enrolled"],["Teachers","Total teachers"],["Drop-out rate","Drop-out rate","%"],["Student attendance","Student attendance (days attended ÷ teaching days)","%"],["Students – toilet score","Students – toilets"]].map(([a,b,c])=>{if(c==='baseline / endline')return`<div class="k"><b>${b}</b><span>${a} (${c})</span></div>`;const u=c==='%'?'%':'',x=ag(V.b,b),y=ag(V.e,b);return`<div class="k"><b>${x==null?'–':fm(x,u)}${y!=null?' → '+fm(y,u):''}</b><span>${a} (baseline${y!=null?' → endline':''})</span></div>`}).join('');
+ let h='';window.CSV=[['Section','Indicator','Baseline','Endline','Change']];
+ for(const[tt,rs]of Object.entries(SEC)){h+=`<div class="card"><h3 style="margin:0 0 8px;font-size:16px">${tt}</h3><div class="scroll"><table><tr><th>Indicator</th><th class="n">Baseline</th><th class="n">Endline</th><th class="n">Change</th></tr>`;
+  for(const x of rs){const b=agg(V.b,x),e=agg(V.e,x);let c='<span class="nt">–</span>',cs='';
+   if(typeof b==='number'&&typeof e==='number'){const d=r1(e-b),cl=d===0||!x[2]?'nt':(d*x[2]>0?'up':'dn');cs=d;c=`<span class="${cl}">${d>0?'▲ +':d<0?'▼ ':'= '}${d===0?'0':d}${x[1]==='%'?' pp':''}</span>`}
+   h+=`<tr><td>${x[0]}</td><td class="n">${b==null?'<span class="pend">Pending</span>':fm(b,x[1])}</td><td class="n">${e==null?'<span class="pend">Pending</span>':fm(e,x[1])}</td><td class="n">${c}</td></tr>`;CSV.push([tt,x[0],b??'',e??'',cs])}
+  h+='</table></div></div>'}$('tabs').innerHTML=h;
+ let g='<p class="lg"><s style="background:var(--base)"></s>Baseline'+(V.e.length?'<s style="background:var(--end)"></s>Endline':'')+'</p>';
+ for(const x of SEC["Satisfaction scores (0–100, form-calculated)"]){const b=agg(V.b,x),e=agg(V.e,x);g+=`<div class="bar"><label>${x[0]}</label><div class="t"><i style="width:${b||0}%;background:var(--base)"></i>${e!=null?`<i style="width:${e}%;background:var(--end)"></i>`:''}</div><em>${b==null?'–':b}${e!=null?' → '+e:''}</em></div>`}
+ $('bars').innerHTML=g;
+ const L=[];for(const w of['b','e'])for(const r of V[w]){L.push(`${r.name} (${w==='b'?'baseline':'endline'}): ${r.nS} students and ${r.nT} teachers interviewed`+(r.nS<30?' – small sample, scores indicative only':''))}
+ const un=[...B.filter(k=>E.length&&!D.e[k]),...E.filter(k=>B.length&&!D.b[k])];
+ $('dq').innerHTML='<ul>'+L.map(s=>`<li>${s}</li>`).join('')+(un.length?`<li>${un.length} school(s) appear in only one round and are excluded from the network comparison.</li>`:'')+'<li>Satisfaction scores are the form’s own calculated fields; check any large changes against the respondent counts above.</li></ul>'}
+</script></body></html>
