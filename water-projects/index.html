@@ -23,11 +23,46 @@ svg text.t{font-size:10px;fill:var(--mu)}svg line.g{stroke:var(--bd)}svg rect[da
 #tp{position:fixed;pointer-events:none;background:#111;color:#fff;padding:4px 8px;border-radius:5px;font-size:12px;display:none;z-index:9}
 dialog{border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);width:min(900px,95vw)}dialog form>div{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
 dialog label{font-size:11px;color:var(--mu);display:flex;flex-direction:column}dialog input{width:100%}
+
+/* GWT refreshed dashboard design – visual layer only */
+:root{--bg:#eaf3f8;--card:#fff;--tx:#102d43;--mu:#526d80;--bd:#d2e1eb;--c0:#087f83;--c1:#f28c00;--c2:#7844a8;--c3:#159b61;--c4:#d94b45;--c5:#1689c5;--c6:#d84b91;--c7:#73899b}
+body{font-size:15px;background:linear-gradient(145deg,#e8f3f8,#f6fbfd 60%,#e6f1f6);color:var(--tx)}
+header{min-height:76px;padding:15px 24px;background:linear-gradient(115deg,#075e68,#087f83 58%,#006d69);box-shadow:0 5px 18px #063f4c28;gap:14px}
+header h1{font-size:clamp(21px,2vw,29px);font-weight:800;letter-spacing:-.45px}header small{font-size:13px;font-weight:600}
+header>div:last-child{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+button,select,input{font-size:14px;border:1px solid #cbdce7;border-radius:9px;padding:8px 11px;transition:box-shadow .16s,border-color .16s,transform .16s}
+button{cursor:pointer;font-weight:650;box-shadow:0 2px 4px #12394d0a}button:hover{transform:translateY(-1px);box-shadow:0 4px 12px #12394d16}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #66c9d5;outline-offset:2px}
+header button{background:#ffffff15;border:1px solid #ffffff55;color:#fff;border-radius:9px;padding:9px 12px}header button.p{background:#fff;color:#087f83;border-color:#fff}
+main{max-width:1740px;padding:18px 22px;margin:auto}
+#flt{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:0 0 15px;padding:12px 14px;background:#dff2f3cc;border:1px solid #c4e5e7;border-radius:15px}
+#flt label{font-size:12px;font-weight:700;color:#315a6d;gap:4px}#flt select{min-width:130px;background:#fff;border-color:#c8dfe8;border-radius:10px;font-weight:600}#clr{background:#fff;color:#16465b;border-color:#c6dce6}
+.kp{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:12px}
+.k{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:84px;padding:13px 14px 12px 68px;border:1px solid #d4e4ed;border-left:4px solid var(--c0);border-radius:15px;background:linear-gradient(145deg,#fff,#f5fafc);box-shadow:0 3px 12px #174b6410}
+.k:before{content:"";position:absolute;left:15px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:13px;background:#dff4f0;color:#087f83;display:grid;place-items:center;font-size:24px;font-weight:800}
+.k:nth-child(1):before{content:"▣"}.k:nth-child(2):before{content:"▦"}.k:nth-child(3):before{content:"⌖"}.k:nth-child(4):before{content:"♧"}.k:nth-child(5):before{content:"⌂"}.k:nth-child(6):before{content:"♧"}.k:nth-child(7):before{content:"≋"}.k:nth-child(8):before{content:"▤"}.k:nth-child(9):before{content:"£"}.k:nth-child(10):before{content:"£"}.k:nth-child(11):before{content:"↗"}
+.k b{font-size:clamp(23px,1.8vw,29px);line-height:1.15;color:#102f46;font-weight:850;letter-spacing:-.5px}.k span{font-size:13px;color:#526d80;font-weight:600;margin-top:4px}
+.currency-strip{display:flex;align-items:center;gap:20px;width:max-content;max-width:100%;margin:0 0 17px;padding:12px 20px;border:1px solid #b8e1dc;border-radius:15px;background:linear-gradient(105deg,#d9f5ee,#e4f8f5);box-shadow:0 3px 10px #147b7410}
+.currency-item{display:grid;grid-template-columns:34px auto;column-gap:10px;align-items:center}.currency-flag{grid-row:span 2;font-size:27px}.currency-item strong{font-size:25px;font-weight:850;color:#075d60;line-height:1.15}.currency-item small{font-size:12px;color:#315f68;font-weight:600}.currency-divider{width:2px;height:42px;background:#8bcfc5}
+.g{gap:15px}.card{padding:15px 16px;border:1px solid #d3e3ed;border-radius:16px;background:linear-gradient(150deg,#fff,#f8fbfd);box-shadow:0 3px 12px #174b6410;overflow:hidden}
+h3{font-size:16px;font-weight:800;color:#143b52;margin-bottom:12px}h3 select{font-size:13px;padding:6px 9px;border-radius:9px}
+small.n{font-size:12px;line-height:1.55;color:#617b8c;margin-top:8px}
+svg text.t{font-size:12px;fill:#567185}svg line.g{stroke:#dbe7ee}
+table{font-size:13px}th,td{padding:8px 10px}th{background:#eaf4f7;color:#17445b}
+dialog{padding:0;border:1px solid #c8dfe9;border-radius:18px;box-shadow:0 22px 65px #123b4c44;max-height:88vh;overflow:auto;width:min(950px,96vw)}
+dialog::backdrop{background:#092d3b66;backdrop-filter:blur(3px)}
+#dlg form{padding:0 20px 17px}#dlg h3#dt{margin:0 -20px 16px;padding:17px 22px;background:linear-gradient(110deg,#087f83,#056a6b);color:white;font-size:20px}
+#ff{grid-template-columns:repeat(4,minmax(0,1fr));gap:11px 12px}
+dialog label{font-size:12px;font-weight:650;color:#486779;gap:4px}dialog input{padding:9px 10px;min-height:38px;border-radius:9px;background:#fbfdff}
+#fm>p{margin:16px 0 0}#sv{padding:10px 19px;background:#087f83;border-color:#087f83}#cx{padding:10px 17px}#pd{padding:20px}
+@media(max-width:1050px){#ff{grid-template-columns:repeat(3,minmax(0,1fr))}.kp{grid-template-columns:repeat(auto-fit,minmax(145px,1fr))}}
+@media(max-width:700px){main{padding:12px}header{padding:14px}#ff{grid-template-columns:repeat(2,minmax(0,1fr))}.currency-strip{width:100%;justify-content:center;gap:12px}.k{padding-left:58px}.k:before{left:10px;width:36px;height:36px}}
+@media(max-width:430px){#ff{grid-template-columns:1fr}.currency-item strong{font-size:20px}}
 </style></head><body>
 <header><div><h1>GWT Water Projects Dashboard</h1><small id="sub"></small></div>
 <div><button class="p" id="add">+ Add project</button> <button id="exc">Export CSV</button> <button id="exj">Backup JSON</button> <button id="pst">📋 Paste data</button> <button id="imp">Import CSV</button> <button id="rst">Reset data</button> <button id="th">◐ Theme</button><input type="file" id="fi" accept=".csv,.json" hidden></div></header>
 <main>
-<div id="flt"></div><div class="kp" id="kp"></div><small class="n"><b>How to read:</b> these cards add up whatever is currently filtered. <i>£ per person</i> = total £ cost ÷ people served. <i>People per tap</i> = people served ÷ tap stands (lower means less crowding at each tap).</small>
+<div id="flt"></div><div class="kp" id="kp"></div><div class="currency-strip" id="currencyStrip"><div class="currency-item"><span class="currency-flag">🇬🇧</span><strong id="gbpPerPerson">£44.8</strong><small>Cost per person</small></div><div class="currency-divider"></div><div class="currency-item"><span class="currency-flag">🇳🇵</span><strong id="nprPerPerson">NPR 6,944</strong><small>At £1 = NPR 155 · per person</small></div></div><small class="n"><b>How to read:</b> these cards add up whatever is currently filtered. <i>£ per person</i> = total £ cost ÷ people served. <i>People per tap</i> = people served ÷ tap stands (lower means less crowding at each tap).</small>
 <div class="g">
 <div class="card s12"><h3>Year-wise <select class="mm" data-s="m1"></select></h3><div id="c1"></div><small class="n"><b>How to read:</b> each bar is one fiscal year (e.g. 2015/16). Bar height = the measure picked in the dropdown (projects built, people served, tap stands, pipe km or cost). Use it to see when work was busiest. Click a bar to filter the whole dashboard to that year; click again to clear. Population, households and tap stands were not recorded before about 1988/89, so early years look empty for those measures.</small></div>
 <div class="card s6"><h3>AWC-wise <span><select class="mm" data-s="m2"></select> <select data-s="awcF"><option>Select AWCs- CodeWise</option><option>Catchment AWC District</option><option>New/Old AWCs</option></select></span></h3><div id="c2"></div><small class="n"><b>How to read:</b> each bar is one AWC. A longer bar means that AWC has more of the chosen measure. The second dropdown changes which AWC column is used for grouping. Click a bar to filter everything to that AWC.</small></div>
@@ -99,6 +134,7 @@ const rp=rs.filter(r=>n(r['Total Population'])>0),cpp=rp.length?rp.reduce((a,r)=
 const rt=pairs(rs,'Total Population','Tapstand Nos'),ppt=rt.length?rt.reduce((a,r)=>a+n(r['Total Population']),0)/rt.reduce((a,r)=>a+n(r['Tapstand Nos']),0):0;
 $('#sub').textContent=`${rs.length.toLocaleString()} of ${D.length.toLocaleString()} projects shown · data saved in this browser`;
 $('#kp').innerHTML=[['Projects',rs.length],['Districts',uniq(rs,'District').length],['AWCs',uniq(rs,S.awcF).length],['Population',sum('Population')],['Households',sum('Households')],['Tap stands',sum('Tap stands')],['Pipe (km)',sum('Pipe (km)')],['Cost (NPR M)',sum('Cost (NPR M)')],['Cost (£M)',sum('Cost (£k)')/1e3],['£ per person',cpp],['People per tap',ppt]].map(k=>`<div class="k"><b>${fmt(k[1])}</b><span>${k[0]}</span></div>`).join('');
+$('#gbpPerPerson').textContent='£'+(Math.round(cpp*10)/10).toLocaleString('en-GB');$('#nprPerPerson').textContent='NPR '+Math.round(cpp*RATE).toLocaleString('en-GB');
 const yo=(m,f)=>{const o=Object.fromEntries(grp(f||rs,'Fiscal Year',m));return yrs.map(y=>o[y]||0)};
 xy($('#c1'),yrs,[{n:S.m1,v:yo(S.m1)}],{bar:1,f:'yr',lbl:1});
 const top=(k,m,N)=>grp(rs,k,m).sort((a,b)=>b[1]-a[1]).slice(0,N);
@@ -145,7 +181,7 @@ else if(d.d!==undefined){if(confirm('Delete this project permanently?')){D.splic
 else if(t.id==='clr'){Object.assign(S,{from:'',to:'',prov:'',dist:'',awc:'',fund:'',phase:'',q:''});sync();render()}});
 /* add / edit */
 let ed=-1;const LF=['District','Province','Funder','Fiscal Year','Status','Project Type','Catchment AWC District','Donor','New/Old AWCs',A,'WATER PHASE WISE','Project TypeII'];
-function openF(i){ed=i;const r=i>=0?D[i]:{SNo:Math.max(0,...D.map(x=>n(x.SNo)))+1,Status:'Completed','Project TypeII':'GWT Water Projects'};$('#dt').textContent=i>=0?'Edit project':'Add project';
+function openF(i){ed=i;const r=i>=0?D[i]:{SNo:D.length+1,Status:'Completed','Project TypeII':'GWT Water Projects'};$('#dt').textContent=i>=0?'Edit project':'Add project';
 $('#ff').innerHTML=F.map((f,j)=>`<label>${esc(f)}<input data-k="${esc(f)}" ${NUM.has(f)?'type="number" step="any"':''} ${LF.includes(f)?`list="dl${LF.indexOf(f)}"`:''} value="${esc(r[f]??'')}"></label>`).join('')+LF.map((f,j)=>`<datalist id="dl${j}">${uniq(D,f).map(v=>`<option value="${esc(v)}">`).join('')}</datalist>`).join('');$('#dlg').showModal()}
 $('#add').onclick=()=>openF(-1);$('#cx').onclick=()=>$('#dlg').close();
 $('#sv').onclick=()=>{const o={};document.querySelectorAll('#ff input[data-k]').forEach(i=>{const k=i.dataset.k,v=i.value.trim();o[k]=NUM.has(k)?(v===''?'':+v):v});
