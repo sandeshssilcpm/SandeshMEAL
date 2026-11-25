@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GWT MSE Kobo Monitoring Dashboard</title>
+<style>
+:root{--g:#007e51;--dark:#123b2d;--mint:#eaf5ef;--line:#d9e5de;--ink:#20372b;--amber:#d18b24}
+*{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:var(--ink);font:14px/1.5 system-ui,Segoe UI,Arial}
+header{background:var(--dark);color:white;padding:25px max(16px,calc((100% - 1250px)/2))}h1{font-size:25px;margin:0}header p{margin:5px 0 0;color:#d6e8de}
+main{max-width:1250px;margin:22px auto;padding:0 16px}.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 2px 12px #123b2d0a}
+h2{font-size:18px;color:var(--dark);margin:0 0 13px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}input,select,button{font:inherit;border:1px solid #b9cec2;border-radius:8px;padding:10px;background:white}button{background:var(--g);color:white;border:0;font-weight:650;cursor:pointer}button:disabled{opacity:.45}.grow{flex:1;min-width:220px}.small{font-size:12px;color:#65766b}.status{background:#eef4f0;padding:10px;border-radius:8px;margin-top:11px}.ok{background:#e5f5eb;color:#145d3b}.err{background:#fff0e9;color:#923d18}.hidden{display:none}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:11px}.kpi{border:1px solid #e0ebe4;background:#f8fbf9;border-radius:11px;padding:14px}.kpi .num{font-size:27px;font-weight:750;color:var(--g);line-height:1.2}.kpi .label{font-size:12px;color:#5b7164;margin-top:6px}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:15px}.chartbox{min-width:0;border:1px solid var(--line);border-radius:11px;padding:13px}.chartbox h3{margin:0 0 8px;font-size:15px;color:var(--dark)}canvas{max-height:340px;width:100%}
+.tablewrap{overflow:auto;max-height:550px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:9px;border-bottom:1px solid #e2ebe5;text-align:left;vertical-align:top}th{background:#eff6f1;position:sticky;top:0;color:#245039}tr:hover td{background:#f8fbf9}.schoolbtn{padding:5px 9px;font-size:12px}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.tab{background:#edf4ef;color:#23513a;padding:7px 12px;border-radius:25px;border:1px solid #d5e4db;cursor:pointer}.tab.active{background:var(--g);color:white}.fields{display:grid;grid-template-columns:minmax(155px,32%) 1fr;gap:9px;padding:7px 3px;border-bottom:1px solid #edf1ee}.key{font-size:12px;color:#64776b;overflow-wrap:anywhere}.val{white-space:pre-wrap;overflow-wrap:anywhere}.repeat{border:1px solid #dce9e1;border-radius:9px;padding:12px;margin:10px 0}.repeat h4{margin:0 0 9px;color:var(--g)}.fieldsearch{width:100%;margin:8px 0}.foot{font-size:12px;color:#64766b;margin:20px 0}.legend{font-size:12px;color:#5d6d62;background:#f7faf8;padding:10px;border-radius:8px;margin-top:10px}
+@media(max-width:760px){.charts{grid-template-columns:1fr}header h1{font-size:21px}.panel{padding:14px}}
+</style></head><body>
+<header><h1>GWT MSE Integrated Monitoring Dashboard</h1><p>School comparison · Teacher and student satisfaction · Full linked Kobo submission explorer</p></header>
+<main>
+<section class="panel"><h2>Upload your Kobo XLSX export</h2><div class="row"><input id="file" type="file" accept=".xlsx,.xls"><span id="lib" class="small">Loading Excel and chart libraries…</span></div>
+<div class="legend"><b>Privacy:</b> workbook is processed locally in this browser. Internet is needed to load the spreadsheet and chart libraries. Upload the original Kobo XLSX export, including all main and repeat-group sheets.</div>
+<div id="status" class="status">Select your Kobo Excel export to populate the dashboard.</div></section>
+<section id="dashboard" class="hidden">
+<div class="panel"><h2>At a glance</h2><div class="kpis" id="kpis"></div></div>
+<div class="panel"><h2>School-level comparison</h2><div class="charts">
+<div class="chartbox"><h3>Average teacher satisfaction (%)</h3><canvas id="teacherChart"></canvas><div class="small">Mean of teacher repeat records, grouped by school submission.</div></div>
+<div class="chartbox"><h3>Average student overall satisfaction (1–4)</h3><canvas id="studentChart"></canvas><div class="small">Mean of student repeat records, grouped by school submission.</div></div>
+<div class="chartbox"><h3>Comparable satisfaction index (0–100)</h3><canvas id="compareChart"></canvas><div class="small">Teacher percentage compared with student rating converted as mean ÷ 4 × 100. This is a descriptive index, not a validated equivalent scale.</div></div>
+<div class="chartbox"><h3>Response coverage by school</h3><canvas id="coverageChart"></canvas><div class="small">Number of linked teacher and student repeat responses.</div></div>
+</div></div>
+<div class="panel"><h2>School summary and comparison table</h2><div class="row"><input id="schoolSearch" class="grow" placeholder="Search school, district, EMIS…"><select id="sort"><option value="name">Sort: School name</option><option value="teacher">Teacher satisfaction (high to low)</option><option value="student">Student satisfaction (high to low)</option><option value="responses">Most repeat responses</option></select></div>
+<div class="tablewrap"><table><thead><tr><th>School / District</th><th>EMIS</th><th>Main record</th><th>Teacher responses</th><th>Teacher mean (%)</th><th>Student responses</th><th>Student mean (1–4)</th><th>Student index (%)</th><th>Open</th></tr></thead><tbody id="schoolRows"></tbody></table></div>
+<div class="legend">Teacher and student averages are calculated from available repeat records for each school submission. Averages are not calculated from the main sheet unless the repeat score fields are populated.</div></div>
+<div class="panel"><h2>Explore one school's complete submission</h2><div class="row"><input id="detailSearch" class="grow" placeholder="Search school name or submission ID"><select id="schoolSelect" class="grow"></select></div><div id="detailSummary" class="status"></div><div class="row" style="margin-top:12px"><button id="downloadSchool">Download complete school workbook</button><button id="downloadCSV" style="background:#365d49">Download readable full-record CSV</button></div><div id="detailTabs" class="tabs"></div><input id="answerSearch" class="fieldsearch" placeholder="Search questions or answers in this sheet"><div id="detailContent"></div></div>
+</section>
+<p class="foot">Score definitions detected in your uploaded workbook: teacher <b>tc_satisfaction_score</b> (percentage) and student <b>st_overall_sat</b> (1–4 response scale). Missing scores are excluded from averages. Each school's repeat records are matched by Kobo submission UUID/ID; parent index is used where needed. This dashboard reports the submissions in the uploaded file, not necessarily the live total in Kobo.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const $=id=>document.getElementById(id);let book,sheets=[],mainSheet,schools=[],chosen=null,activeTab='main',charts={};
+$('lib').textContent='XLSX '+(window.XLSX?'ready':'not loaded')+' · Charts '+(window.Chart?'ready':'not loaded');
+const t=v=>v===null||v===undefined?'':String(v).trim();
+const esc=s=>t(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function setStatus(msg,cls=''){ $('status').className='status '+cls;$('status').textContent=msg;}
+function sheetRows(ws){return XLSX.utils.sheet_to_json(ws,{defval:null,raw:false});}
+function first(s){return s.rows[0]||{};}
+function destroyCharts(){Object.values(charts).forEach(c=>c.destroy());charts={};}
+$('file').addEventListener('change',e=>{
+ const f=e.target.files[0];if(!f)return;
+ const reader=new FileReader();reader.onload=ev=>{try{
+ book=XLSX.read(ev.target.result,{type:'array'});
+ sheets=book.SheetNames.map(name=>({name,rows:sheetRows(book.Sheets[name])}));
+ mainSheet=sheets.find(s=>s.rows.length&&('school_name'in first(s)||'school'in first(s)))||sheets.find(s=>s.rows.length&&!('_parent_index'in first(s)));
+ if(!mainSheet)throw Error('Main submission sheet could not be identified.');
+ const mainRow=first(mainSheet),schoolCol=Object.keys(mainRow).find(k=>['school_name','school','School name'].includes(k));
+ if(!schoolCol)throw Error('The main sheet has no recognised school_name field.');
+ schools=mainSheet.rows.map((r,i)=>({raw:r,rowIndex:i,name:t(r[schoolCol]),district:t(r.district),emis:t(r.emis),uuid:t(r._uuid||r._submission__uuid),id:t(r._id||r._submission__id),index:t(r._index||i+1),sheet:mainSheet})).filter(x=>x.name);
+ schools.forEach(s=>{s.linked=findLinked(s);s.teacher=s.linked.find(x=>x.sheet.name.toLowerCase().includes('rep_teacher'))?.rows||[];s.student=s.linked.find(x=>x.sheet.name.toLowerCase().includes('rep_student'))?.rows||[];
+ s.teacherVals=s.teacher.map(r=>Number(r.tc_satisfaction_score)).filter(n=>Number.isFinite(n));s.studentVals=s.student.map(r=>Number(r.st_overall_sat)).filter(n=>Number.isFinite(n));
+ s.teacherMean=mean(s.teacherVals);s.studentMean=mean(s.studentVals);s.studentIndex=s.studentMean===null?null:s.studentMean/4*100;});
+ $('dashboard').classList.remove('hidden');renderDashboard();fillSchoolSelect();setStatus(`Loaded ${sheets.length} sheets and ${schools.length} school submissions. Dashboard is ready.`,'ok');
+ }catch(err){setStatus(err.message||String(err),'err');}};reader.onerror=()=>setStatus('Could not read file. Please upload an XLSX export.','err');reader.readAsArrayBuffer(f);
+});
+function mean(a){return a.length?a.reduce((x,y)=>x+y,0)/a.length:null;}
+function findLinked(s){
+ return sheets.filter(x=>x!==mainSheet&&x.rows.length&&('_parent_index'in first(x)||'_submission__uuid'in first(x)||'_submission__id'in first(x)))
+ .map(x=>{let r=[];
+ if(s.uuid&&('_submission__uuid'in first(x)))r=x.rows.filter(a=>t(a._submission__uuid)===s.uuid);
+ if(!r.length&&s.id&&('_submission__id'in first(x)))r=x.rows.filter(a=>t(a._submission__id)===s.id);
+ if(!r.length&&('_parent_index'in first(x)))r=x.rows.filter(a=>t(a._parent_index)===s.index);
+ return {sheet:x,rows:r};}).filter(x=>x.rows.length);
+}
+function fmt(n,d=1){return n===null||!Number.isFinite(n)?'—':n.toFixed(d);}
+function renderDashboard(){
+ const nTeacher=schools.reduce((a,s)=>a+s.teacherVals.length,0),nStudent=schools.reduce((a,s)=>a+s.studentVals.length,0);
+ const tm=mean(schools.flatMap(s=>s.teacherVals)),sm=mean(schools.flatMap(s=>s.studentVals));
+ const metrics=[['Schools / submissions',schools.length],['Teacher repeat responses',nTeacher],['Teacher mean satisfaction',fmt(tm)+'%'],['Student repeat responses',nStudent],['Student mean overall rating',fmt(sm)+' / 4']];
+ $('kpis').innerHTML=metrics.map(m=>`<div class="kpi"><div class="num">${esc(m[1])}</div><div class="label">${esc(m[0])}</div></div>`).join('');
+ const labels=schools.map(s=>s.name.length>26?s.name.slice(0,24)+'…':s.name);
+ const common={responsive:true,maintainAspectRatio:true,plugins:{legend:{display:true}},scales:{y:{beginAtZero:true}}};
+ chart('teacherChart','bar',labels,[{label:'Teacher mean (%)',data:schools.map(s=>s.teacherMean),backgroundColor:'#007e51'}],{...common,scales:{y:{min:0,max:100}}});
+ chart('studentChart','bar',labels,[{label:'Student mean (1–4)',data:schools.map(s=>s.studentMean),backgroundColor:'#d18b24'}],{...common,scales:{y:{min:0,max:4}}});
+ chart('compareChart','bar',labels,[{label:'Teacher (%)',data:schools.map(s=>s.teacherMean),backgroundColor:'#007e51'},{label:'Student index (%)',data:schools.map(s=>s.studentIndex),backgroundColor:'#d18b24'}],{...common,scales:{y:{min:0,max:100}}});
+ chart('coverageChart','bar',labels,[{label:'Teacher responses',data:schools.map(s=>s.teacher.length),backgroundColor:'#007e51'},{label:'Student responses',data:schools.map(s=>s.student.length),backgroundColor:'#7b9b8b'}],common);
+ renderTable();
+}
+function chart(id,type,labels,datasets,options){if(charts[id])charts[id].destroy();charts[id]=new Chart($(id),{type,data:{labels,datasets},options});}
+$('schoolSearch').addEventListener('input',renderTable);$('sort').addEventListener('change',renderTable);
+function renderTable(){let q=$('schoolSearch').value.toLowerCase(),arr=schools.filter(s=>(s.name+' '+s.district+' '+s.emis).toLowerCase().includes(q));let sort=$('sort').value;
+ if(sort==='teacher')arr.sort((a,b)=>(b.teacherMean??-1)-(a.teacherMean??-1));else if(sort==='student')arr.sort((a,b)=>(b.studentMean??-1)-(a.studentMean??-1));else if(sort==='responses')arr.sort((a,b)=>b.teacher.length+b.student.length-a.teacher.length-a.student.length);else arr.sort((a,b)=>a.name.localeCompare(b.name));
+ $('schoolRows').innerHTML=arr.map(s=>`<tr><td><b>${esc(s.name)}</b><br><span class="small">${esc(s.district)}</span></td><td>${esc(s.emis||'—')}</td><td>1</td><td>${s.teacher.length}</td><td>${fmt(s.teacherMean)}%</td><td>${s.student.length}</td><td>${fmt(s.studentMean)}</td><td>${fmt(s.studentIndex)}%</td><td><button class="schoolbtn" data-idx="${s.rowIndex}">Open</button></td></tr>`).join('');
+ $('schoolRows').querySelectorAll('button').forEach(b=>b.onclick=()=>{ $('schoolSelect').value=b.dataset.idx;renderDetail();$('detailSummary').scrollIntoView({behavior:'smooth',block:'center'});});
+}
+function fillSchoolSelect(){const q=$('detailSearch').value.toLowerCase(),sel=$('schoolSelect');sel.innerHTML='';
+ schools.filter(s=>(s.name+' '+s.id+' '+s.emis+' '+s.district).toLowerCase().includes(q)).forEach(s=>{let o=document.createElement('option');o.value=s.rowIndex;o.textContent=s.name+' | '+(s.district||'')+' | '+(s.id||s.index);sel.appendChild(o);});
+ if(sel.options.length){sel.selectedIndex=0;renderDetail();}}
+$('detailSearch').addEventListener('input',fillSchoolSelect);$('schoolSelect').addEventListener('change',renderDetail);
+function renderDetail(){chosen=schools.find(s=>s.rowIndex===Number($('schoolSelect').value));if(!chosen)return;activeTab='main';
+ $('detailSummary').innerHTML=`<b>${esc(chosen.name)}</b> · ${esc(chosen.district)} · EMIS ${esc(chosen.emis||'—')}<br>Teacher mean: <b>${fmt(chosen.teacherMean)}%</b> from ${chosen.teacherVals.length} scored teacher records · Student mean: <b>${fmt(chosen.studentMean)} / 4</b> from ${chosen.studentVals.length} scored student records`;
+ $('detailTabs').innerHTML='';addTab('main','Main sheet',1);
+ chosen.linked.forEach((x,i)=>addTab('rep'+i,x.sheet.name,x.rows.length));renderDetailTab();}
+function addTab(id,label,n){let b=document.createElement('button');b.className='tab'+(activeTab===id?' active':'');b.textContent=label+' ('+n+')';b.onclick=()=>{activeTab=id;renderDetailTab();};$('detailTabs').appendChild(b);}
+function renderDetailTab(){[...$('detailTabs').children].forEach((b,i)=>b.classList.toggle('active',(i===0&&activeTab==='main')||activeTab==='rep'+(i-1)));
+ let container=$('detailContent');container.innerHTML='';let q=$('answerSearch').value.toLowerCase();
+ if(activeTab==='main'){container.appendChild(showFields(mainSheet.name,chosen.raw,q));}
+ else{let x=chosen.linked[Number(activeTab.slice(3))];if(!x)return;x.rows.forEach((r,i)=>container.appendChild(showFields(x.sheet.name+' · Repeat record '+(i+1),r,q)));}
+}
+function showFields(title,row,q){let div=document.createElement('div');div.className='repeat';let html=`<h4>${esc(title)}</h4>`;
+ Object.keys(row).filter(k=>!k.startsWith('__')).forEach(k=>{let v=t(row[k]);if(!v|| (q&&!(k+' '+v).toLowerCase().includes(q)))return;html+=`<div class="fields"><div class="key">${esc(k)}</div><div class="val">${esc(v)}</div></div>`;});
+ div.innerHTML=html;return div;}
+$('answerSearch').addEventListener('input',renderDetailTab);
+function writeWorkbook(){const out=XLSX.utils.book_new();append(out,mainSheet.name,[chosen.raw],Object.keys(mainSheet.rows[0]||{}));chosen.linked.forEach(x=>append(out,x.sheet.name,x.rows,Object.keys(x.sheet.rows[0]||{})));let nm=chosen.name.replace(/[\\/:*?"<>|]/g,'_');XLSX.writeFile(out,nm+'_GWT_complete_submission.xlsx');}
+function append(out,n,rows,heads){const arr=[heads,...rows.map(r=>heads.map(h=>r[h]??null))];XLSX.utils.book_append_sheet(out,XLSX.utils.aoa_to_sheet(arr),n.slice(0,31));}
+$('downloadSchool').onclick=()=>{if(chosen)writeWorkbook();};
+$('downloadCSV').onclick=()=>{if(!chosen)return;let arr=[['Sheet','Record','Field','Answer']];
+ Object.keys(chosen.raw).forEach(k=>{if(t(chosen.raw[k]))arr.push([mainSheet.name,'Main',k,t(chosen.raw[k])]);});
+ chosen.linked.forEach(x=>x.rows.forEach((r,i)=>Object.keys(r).forEach(k=>{if(t(r[k]))arr.push([x.sheet.name,'Repeat '+(i+1),k,t(r[k])]);})));
+ const csv=arr.map(r=>r.map(v=>'"'+t(v).replace(/"/g,'""')+'"').join(',')).join('\r\n'),blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=chosen.name.replace(/[\\/:*?"<>|]/g,'_')+'_full_record.csv';a.click();URL.revokeObjectURL(url);};
+</script></body></html>
