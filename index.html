@@ -3,76 +3,197 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>GWT Nepal | M&E Dashboard Portal</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f6fa;color:#203047}
-header{background:#123653;color:white;padding:32px 7%}
-header h1{margin:0 0 10px;font-size:28px}
-header p{margin:0;color:#d6e4ef}
-main{max-width:1150px;margin:35px auto;padding:0 20px}
-.intro{margin-bottom:25px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
-.card{background:white;padding:25px;border-radius:12px;border:1px solid #e1e8ef;box-shadow:0 4px 15px #17324d0d}
-.card h2{font-size:19px;margin:10px 0}
-.card p{color:#65758a;line-height:1.6;min-height:45px}
-.card a{display:inline-block;background:#176b87;color:white;text-decoration:none;padding:10px 16px;border-radius:6px}
-.card a:hover{background:#104e67}
-.icon{font-size:30px}
-footer{text-align:center;padding:30px;color:#718096;font-size:13px}
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f1f5f9;
+    color: #172b4d;
+}
+
+.container {
+    max-width: 1500px;
+    margin: auto;
+    padding: 35px 40px;
+}
+
+.header {
+    margin-bottom: 35px;
+    border-left: 6px solid #007E51;
+    padding-left: 20px;
+}
+
+.header h1 {
+    font-size: 30px;
+    color: #007E51;
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 16px;
+    color: #475569;
+    line-height: 1.7;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 22px;
+}
+
+.card {
+    background: #ffffff;
+    border: 1px solid #d5e8df;
+    border-top: 5px solid #007E51;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    min-height: 280px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 22px rgba(0,126,81,0.15);
+}
+
+.icon {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.card h2 {
+    font-size: 20px;
+    color: #007E51;
+    margin: 0 0 15px;
+}
+
+.card p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+.card a {
+    display: inline-block;
+    width: fit-content;
+    margin-top: auto;
+    background: #007E51;
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.card a:hover {
+    background: #005C3B;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 45px;
+    padding: 22px;
+    color: #64748b;
+    font-size: 13px;
+    border-top: 1px solid #d5e8df;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    .header h1 {
+        font-size: 24px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 </head>
+
 <body>
-<header>
-<h1>Gurkha Welfare Trust Nepal</h1>
-<p>Monitoring, Evaluation and Learning Dashboard Portal</p>
-</header>
-<main>
-<section class="intro">
-<h2>Project Dashboards</h2>
-<p><section class="intro">
-    <h1>GWT Nepal – Monitoring and Evaluation Dashboard Portal</h1>
-    <p><strong>Welcome to the GWT Nepal Monitoring and Evaluation Dashboard Portal.</strong></p>
 
-    <p>This portal provides a central platform for accessing, reviewing and analysing monitoring and evaluation data across GWT Nepal's projects. It brings together project-specific dashboards to support progress tracking, performance assessment, outcome measurement and evidence-based decision-making.</p>
+<div class="container">
 
-    <p>Through accessible data and interactive visualisations, the portal aims to strengthen accountability, improve programme quality and support organisational learning.</p>
-</section></p>
-</section>
-<section class="grid">
-<div class="card">
-<div class="icon">🏫</div>
-<h2>School Survey Dashboard</h2>
-<p>Baseline, endline and outcome monitoring of schools.</p>
-<a href="mschoolsurveydashboard/">Open dashboard</a>
+    <div class="header">
+        <h1>GWT Nepal – Monitoring and Evaluation Dashboard Portal</h1>
+
+        <p>
+            Welcome to the GWT Nepal Monitoring and Evaluation Dashboard Portal.
+            This central platform provides access to monitoring, evaluation
+            and project information across GWT Nepal's Community Aid programmes.
+            Select a dashboard below to explore project data and progress.
+        </p>
+    </div>
+
+    <section class="grid">
+
+        <div class="card">
+            <div class="icon">🏫</div>
+            <h2>School Survey Dashboard</h2>
+            <p>Baseline, endline and outcome monitoring of schools.</p>
+            <a href="mschoolsurveydashboard/">Open Dashboard</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">👥</div>
+            <h2>Community Aid</h2>
+            <p>Community Aid projects, activities and expenditure.</p>
+            <a href="community-aid/">Open Dashboard</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">🏢</div>
+            <h2>Major School Project</h2>
+            <p>Major school construction and project monitoring.</p>
+            <a href="major-school/">Open Dashboard</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">📚</div>
+            <h2>Minor School Extension</h2>
+            <p>Minor school extension and refurbishment projects.</p>
+            <a href="minor-school-extension/">Open Dashboard</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">💧</div>
+            <h2>Water Projects</h2>
+            <p>Water supply, household access and sustainability.</p>
+            <a href="water-projects/">Open Dashboard</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">🌊</div>
+            <h2>Water Digitalisation Record</h2>
+            <p>Digital water project records, monitoring data and project information.</p>
+            <a href="WaterDigitalisationRecord/">Open Dashboard</a>
+        </div>
+
+    </section>
+
+    <div class="footer">
+        Gurkha Welfare Trust Nepal | Monitoring, Evaluation and Learning
+    </div>
+
 </div>
-<div class="card">
-<div class="icon">👥</div>
-<h2>Community Aid</h2>
-<p>Community Aid projects, activities and expenditure.</p>
-<a href="community-aid/">Open dashboard</a>
-</div>
-<div class="card">
-<div class="icon">🏢</div>
-<h2>Major School Project</h2>
-<p>Major school construction and project monitoring.</p>
-<a href="major-school/">Open dashboard</a>
-</div>
-<div class="card">
-<div class="icon">📚</div>
-<h2>Minor School Extension</h2>
-<p>Minor school extension and refurbishment projects.</p>
-<a href="minor-school-extension/">Open dashboard</a>
-</div>
-<div class="card">
-<div class="icon">💧</div>
-<h2>Water Projects</h2>
-<p>Water supply, household access and sustainability.</p>
-<a href="water-projects/">Open dashboard</a>
-</div>
-</section>
-</main>
-<footer>Gurkha Welfare Trust Nepal | Monitoring and Evaluation</footer>
+
 </body>
 </html>
