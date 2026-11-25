@@ -1,65 +1,69 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GWT Water Projects Dashboard</title>
 <style>
-:root{--bg:#f3f6f9;--card:#fff;--tx:#1b2430;--mu:#6b7686;--bd:#e1e7ee;--c0:#0b7285;--c1:#f08c00;--c2:#7048e8;--c3:#2f9e44;--c4:#e03131;--c5:#1c7ed6;--c6:#d6336c;--c7:#868e96}
-[data-theme=dark]{--bg:#10151c;--card:#19212b;--tx:#e6ebf1;--mu:#97a3b3;--bd:#2a3542}
-*{box-sizing:border-box}body{margin:0;font:14px/1.4 system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--tx)}
-header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--c0);color:#fff}
-h1{font-size:20px;margin:0}header small{opacity:.85}
-button,select,input{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:5px 8px}
-button{cursor:pointer}button.p{background:var(--c0);color:#fff;border-color:var(--c0)}button.d{color:var(--c4)}
-header button{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.4)}header button.p{background:#fff;color:var(--c0)}
-main{padding:14px 20px;max-width:1500px;margin:auto}
-#flt{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:14px}#flt label{display:flex;flex-direction:column;font-size:11px;color:var(--mu)}
-.kp{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px}
-.k{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;border-left:4px solid var(--c0)}.k b{font-size:22px;display:block}.k span{color:var(--mu);font-size:12px}
-.g{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px;min-width:0}
+/* Theme matched to "Water Digitisation Record" (visual layer only – all logic unchanged) */
+:root{--bg:#eef3fa;--card:#fff;--tx:#0f1b33;--mu:#5b6b8c;--bd:#dbe3f1;--hi:#e6f0fd;--acc:#38bdf8;
+--c0:#38bdf8;--c1:#fbbf24;--c2:#a78bfa;--c3:#34d399;--c4:#f87171;--c5:#fb923c;--c6:#f472b6;--c7:#94a3b8}
+[data-theme=dark]{--bg:#0a1424;--card:#111d33;--tx:#e8eefc;--mu:#8a98b8;--bd:#22314f;--hi:#1b2c4d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,Segoe UI,Roboto,sans-serif}
+header{padding:26px 28px;background:linear-gradient(120deg,#0369a1,#0e7490 55%,#047857);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:28px;letter-spacing:.3px}
+header small{display:block;margin-top:4px;opacity:.85;font-size:14px}
+header>div:last-child{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,select,input{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:7px 10px}
+button{cursor:pointer}button:hover{border-color:#38bdf8}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid #38bdf8;outline-offset:1px}
+button.p{background:#0ea5e9;color:#fff;border-color:#0ea5e9}button.d{color:#f87171}
+header button{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.35)}
+header button.p{background:#fff;color:#0369a1;border-color:#fff}
+main{padding:18px 28px 40px;max-width:1500px;margin:auto}
+#flt{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin-bottom:12px;position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0}
+#flt label{display:flex;flex-direction:column;font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;gap:3px}
+#flt select{min-width:110px;text-transform:none;letter-spacing:0;font-size:14px}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+.k{--c:var(--c0);display:flex;flex-direction:column;background:var(--card);border:1px solid var(--bd);border-top:3px solid var(--c);border-radius:14px;padding:14px 16px}
+.k:nth-child(8n+1){--c:var(--c0)}.k:nth-child(8n+2){--c:var(--c2)}.k:nth-child(8n+3){--c:var(--c1)}.k:nth-child(8n+4){--c:var(--c3)}
+.k:nth-child(8n+5){--c:var(--c4)}.k:nth-child(8n+6){--c:var(--c5)}.k:nth-child(8n+7){--c:var(--c6)}.k:nth-child(8n+8){--c:var(--c7)}
+.k b{display:block;font-size:28px;margin-top:2px;line-height:1.2}
+.k span{order:-1;color:var(--mu);font-size:12px;text-transform:uppercase;letter-spacing:.6px}
+.currency-strip{display:flex;align-items:center;gap:22px;width:max-content;max-width:100%;margin:0 0 14px;padding:12px 20px;background:var(--card);border:1px solid var(--bd);border-top:3px solid var(--c3);border-radius:14px}
+.currency-item{display:grid;grid-template-columns:34px auto;column-gap:10px;align-items:center}
+.currency-flag{grid-row:span 2;font-size:26px}
+.currency-item strong{font-size:24px;line-height:1.15;color:var(--tx)}
+.currency-item small{font-size:12px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px}
+.currency-divider{align-self:stretch;width:1px;background:var(--bd)}
+.g{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px;min-width:0;overflow:hidden}
 .s12{grid-column:span 12}.s8{grid-column:span 8}.s6{grid-column:span 6}.s4{grid-column:span 4}
-@media(max-width:900px){.s8,.s6,.s4{grid-column:span 12}}
-h3{margin:0 0 8px;font-size:14px;display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;align-items:center}h3 select{font-size:12px;padding:2px 4px}
-small.n{color:var(--mu);display:block;margin-top:4px;font-size:11px}
-svg text.t{font-size:10px;fill:var(--mu)}svg line.g{stroke:var(--bd)}svg rect[data-f]{cursor:pointer}svg rect:hover,svg circle:hover{opacity:.7}
-.lg{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;margin-bottom:4px}.lg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px}
-#ins li{margin:4px 0}.tw{overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:5px 8px;border-bottom:1px solid var(--bd);white-space:nowrap;text-align:left}th{cursor:pointer;position:sticky;top:0;background:var(--card)}
-#tp{position:fixed;pointer-events:none;background:#111;color:#fff;padding:4px 8px;border-radius:5px;font-size:12px;display:none;z-index:9}
-dialog{border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);width:min(900px,95vw)}dialog form>div{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
-dialog label{font-size:11px;color:var(--mu);display:flex;flex-direction:column}dialog input{width:100%}
-
-/* GWT refreshed dashboard design – visual layer only */
-:root{--bg:#eaf3f8;--card:#fff;--tx:#102d43;--mu:#526d80;--bd:#d2e1eb;--c0:#087f83;--c1:#f28c00;--c2:#7844a8;--c3:#159b61;--c4:#d94b45;--c5:#1689c5;--c6:#d84b91;--c7:#73899b}
-body{font-size:15px;background:linear-gradient(145deg,#e8f3f8,#f6fbfd 60%,#e6f1f6);color:var(--tx)}
-header{min-height:76px;padding:15px 24px;background:linear-gradient(115deg,#075e68,#087f83 58%,#006d69);box-shadow:0 5px 18px #063f4c28;gap:14px}
-header h1{font-size:clamp(21px,2vw,29px);font-weight:800;letter-spacing:-.45px}header small{font-size:13px;font-weight:600}
-header>div:last-child{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
-button,select,input{font-size:14px;border:1px solid #cbdce7;border-radius:9px;padding:8px 11px;transition:box-shadow .16s,border-color .16s,transform .16s}
-button{cursor:pointer;font-weight:650;box-shadow:0 2px 4px #12394d0a}button:hover{transform:translateY(-1px);box-shadow:0 4px 12px #12394d16}
-button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #66c9d5;outline-offset:2px}
-header button{background:#ffffff15;border:1px solid #ffffff55;color:#fff;border-radius:9px;padding:9px 12px}header button.p{background:#fff;color:#087f83;border-color:#fff}
-main{max-width:1740px;padding:18px 22px;margin:auto}
-#flt{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:0 0 15px;padding:12px 14px;background:#dff2f3cc;border:1px solid #c4e5e7;border-radius:15px}
-#flt label{font-size:12px;font-weight:700;color:#315a6d;gap:4px}#flt select{min-width:130px;background:#fff;border-color:#c8dfe8;border-radius:10px;font-weight:600}#clr{background:#fff;color:#16465b;border-color:#c6dce6}
-.kp{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:12px}
-.k{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:84px;padding:13px 14px 12px 68px;border:1px solid #d4e4ed;border-left:4px solid var(--c0);border-radius:15px;background:linear-gradient(145deg,#fff,#f5fafc);box-shadow:0 3px 12px #174b6410}
-.k:before{content:"";position:absolute;left:15px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:13px;background:#dff4f0;color:#087f83;display:grid;place-items:center;font-size:24px;font-weight:800}
-.k:nth-child(1):before{content:"▣"}.k:nth-child(2):before{content:"▦"}.k:nth-child(3):before{content:"⌖"}.k:nth-child(4):before{content:"♧"}.k:nth-child(5):before{content:"⌂"}.k:nth-child(6):before{content:"♧"}.k:nth-child(7):before{content:"≋"}.k:nth-child(8):before{content:"▤"}.k:nth-child(9):before{content:"£"}.k:nth-child(10):before{content:"£"}.k:nth-child(11):before{content:"↗"}
-.k b{font-size:clamp(23px,1.8vw,29px);line-height:1.15;color:#102f46;font-weight:850;letter-spacing:-.5px}.k span{font-size:13px;color:#526d80;font-weight:600;margin-top:4px}
-.currency-strip{display:flex;align-items:center;gap:20px;width:max-content;max-width:100%;margin:0 0 17px;padding:12px 20px;border:1px solid #b8e1dc;border-radius:15px;background:linear-gradient(105deg,#d9f5ee,#e4f8f5);box-shadow:0 3px 10px #147b7410}
-.currency-item{display:grid;grid-template-columns:34px auto;column-gap:10px;align-items:center}.currency-flag{grid-row:span 2;font-size:27px}.currency-item strong{font-size:25px;font-weight:850;color:#075d60;line-height:1.15}.currency-item small{font-size:12px;color:#315f68;font-weight:600}.currency-divider{width:2px;height:42px;background:#8bcfc5}
-.g{gap:15px}.card{padding:15px 16px;border:1px solid #d3e3ed;border-radius:16px;background:linear-gradient(150deg,#fff,#f8fbfd);box-shadow:0 3px 12px #174b6410;overflow:hidden}
-h3{font-size:16px;font-weight:800;color:#143b52;margin-bottom:12px}h3 select{font-size:13px;padding:6px 9px;border-radius:9px}
-small.n{font-size:12px;line-height:1.55;color:#617b8c;margin-top:8px}
-svg text.t{font-size:12px;fill:#567185}svg line.g{stroke:#dbe7ee}
-table{font-size:13px}th,td{padding:8px 10px}th{background:#eaf4f7;color:#17445b}
-dialog{padding:0;border:1px solid #c8dfe9;border-radius:18px;box-shadow:0 22px 65px #123b4c44;max-height:88vh;overflow:auto;width:min(950px,96vw)}
-dialog::backdrop{background:#092d3b66;backdrop-filter:blur(3px)}
-#dlg form{padding:0 20px 17px}#dlg h3#dt{margin:0 -20px 16px;padding:17px 22px;background:linear-gradient(110deg,#087f83,#056a6b);color:white;font-size:20px}
-#ff{grid-template-columns:repeat(4,minmax(0,1fr));gap:11px 12px}
-dialog label{font-size:12px;font-weight:650;color:#486779;gap:4px}dialog input{padding:9px 10px;min-height:38px;border-radius:9px;background:#fbfdff}
-#fm>p{margin:16px 0 0}#sv{padding:10px 19px;background:#087f83;border-color:#087f83}#cx{padding:10px 17px}#pd{padding:20px}
-@media(max-width:1050px){#ff{grid-template-columns:repeat(3,minmax(0,1fr))}.kp{grid-template-columns:repeat(auto-fit,minmax(145px,1fr))}}
-@media(max-width:700px){main{padding:12px}header{padding:14px}#ff{grid-template-columns:repeat(2,minmax(0,1fr))}.currency-strip{width:100%;justify-content:center;gap:12px}.k{padding-left:58px}.k:before{left:10px;width:36px;height:36px}}
-@media(max-width:430px){#ff{grid-template-columns:1fr}.currency-item strong{font-size:20px}}
+@media(max-width:1000px){.s8,.s6,.s4{grid-column:span 12}}
+h3{margin:0 0 10px;font-size:14px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;font-weight:600;display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;align-items:center}
+h3 select,h3 input,h3 label{font-size:12.5px;padding:4px 8px;text-transform:none;letter-spacing:0;font-weight:400}
+h3 label{padding:0;color:var(--mu)}h3 label input{padding:0}
+small.n{display:block;margin-top:8px;font-size:12px;line-height:1.55;color:var(--mu)}
+svg text.t{font-size:11px;fill:var(--mu)}svg line.g{stroke:var(--bd)}
+svg rect[data-f]{cursor:pointer}svg rect:hover,svg circle:hover,svg path:hover{opacity:.75}
+.lg{display:flex;gap:10px;flex-wrap:wrap;font-size:12.5px;margin-bottom:4px}
+.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+#ins{padding-left:18px;margin:0}#ins li{margin:5px 0}
+.tw{overflow:auto;max-height:560px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--bd);white-space:nowrap;text-align:left}
+th{position:sticky;top:0;background:var(--card);border-bottom:2px solid var(--bd);cursor:pointer;color:var(--mu);font-weight:600}
+tr:hover td{background:var(--hi)}td button{padding:1px 7px}
+#tp{position:fixed;pointer-events:none;background:#0ea5e9;color:#fff;padding:4px 10px;border-radius:8px;font-size:12px;display:none;z-index:99}
+dialog{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:14px;padding:20px;width:min(900px,95vw);max-height:90vh;overflow:auto}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+dialog h3{margin:0 0 12px;font-size:18px;color:var(--tx);text-transform:none;letter-spacing:0;font-weight:600}
+dialog form>div{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+dialog label{font-size:12px;color:var(--mu);display:flex;flex-direction:column;gap:3px}
+dialog input{width:100%}
+dialog p{margin:14px 0 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+#pd p:first-of-type{justify-content:flex-start}
+textarea{font:12px/1.4 ui-monospace,monospace;color:var(--tx);background:var(--bg)!important;border:1px solid var(--bd)!important;border-radius:8px!important;padding:8px;margin:8px 0}
+@media(max-width:700px){main{padding:14px 14px 32px}header{padding:18px 16px}h1{font-size:22px}.currency-strip{width:100%;justify-content:center;gap:12px}}
+@media(max-width:430px){.currency-item strong{font-size:20px}}
 </style></head><body>
-<header><div><h1>GWT Water Projects Dashboard</h1><small id="sub"></small></div>
+<header><div><h1>💧 GWT Water Projects Dashboard</h1><small id="sub"></small></div>
 <div><button class="p" id="add">+ Add project</button> <button id="exc">Export CSV</button> <button id="exj">Backup JSON</button> <button id="pst">📋 Paste data</button> <button id="imp">Import CSV</button> <button id="rst">Reset data</button> <button id="th">◐ Theme</button><input type="file" id="fi" accept=".csv,.json" hidden></div></header>
 <main>
 <div id="flt"></div><div class="kp" id="kp"></div><div class="currency-strip" id="currencyStrip"><div class="currency-item"><span class="currency-flag">🇬🇧</span><strong id="gbpPerPerson">£44.8</strong><small>Cost per person</small></div><div class="currency-divider"></div><div class="currency-item"><span class="currency-flag">🇳🇵</span><strong id="nprPerPerson">NPR 6,944</strong><small>At £1 = NPR 155 · per person</small></div></div><small class="n"><b>How to read:</b> these cards add up whatever is currently filtered. <i>£ per person</i> = total £ cost ÷ people served. <i>People per tap</i> = people served ÷ tap stands (lower means less crowding at each tap).</small>
@@ -75,7 +79,7 @@ dialog label{font-size:12px;font-weight:650;color:#486779;gap:4px}dialog input{p
 <div class="card s6"><h3>Cost per person served (£) by year</h3><div id="c8"></div><small class="n"><b>How to read:</b> for each year, total £ cost ÷ total people served (only projects where population was recorded). A rising line means water costs more per person, which can reflect longer pipelines, harder terrain or higher prices.</small></div>
 <div class="card s6"><h3>People per tap stand by year</h3><div id="c9"></div><small class="n"><b>How to read:</b> for each year, people served ÷ tap stands. A higher point means more people share each tap; a lower point means better access per person.</small></div>
 <div class="card s8"><h3>Correlation explorer <span><select data-s="sx" class="sf"></select> vs <select data-s="sy" class="sf"></select> <label><input type="checkbox" data-s="log"> log scale</label></span></h3><div id="c10"></div><small class="n" id="c10n"></small><small class="n"><b>How to read:</b> each dot is one project; pick what goes on the X and Y axes in the dropdowns. The dashed line is the overall trend. <b>r</b> runs from −1 to +1: close to +1 means the two measures rise together, near 0 means no real link, negative means one rises as the other falls. Tick <i>log scale</i> to spread out the dots, because a few very large projects otherwise squash the rest. Dot colour = funder; hover a dot to see the project.</small></div>
-<div class="card s4"><h3>Correlation matrix (Pearson r)</h3><div id="c11"></div><small class="n"><b>How to read:</b> each square compares two measures and shows their correlation r. Teal = they rise together, red = opposite direction. A darker square means a stronger link and the number is the exact r. The diagonal is always 1.00 because a measure matches itself. Only projects where both values are recorded (&gt;0) are used.</small></div>
+<div class="card s4"><h3>Correlation matrix (Pearson r)</h3><div id="c11"></div><small class="n"><b>How to read:</b> each square compares two measures and shows their correlation r. Blue = they rise together, red = opposite direction. A darker square means a stronger link and the number is the exact r. The diagonal is always 1.00 because a measure matches itself. Only projects where both values are recorded (&gt;0) are used.</small></div>
 <div class="card s8"><h3>AWC × 5-year period (uses AWC metric)</h3><div id="c12"></div><small class="n"><b>How to read:</b> each row is an AWC and each column is a 5-year period (for example 15–19 = fiscal years 2015 to 2019). A darker square means more of the chosen measure in that period. It shows when each AWC was most active. The measure follows the AWC chart’s dropdown.</small></div>
 <div class="card s4"><h3>£ per person by AWC</h3><div id="c13"></div><small class="n"><b>How to read:</b> total £ cost ÷ people served for each AWC. A longer red bar means each person served cost more there. Compare with the pipe-length correlation to see if long pipelines explain the higher cost.</small></div>
 <div class="card s12"><h3>Project records <span><input data-s="q" placeholder="Search anything…"> <label><input type="checkbox" data-s="all"> all columns</label></span></h3><div class="tw" id="tb"></div><div id="pg" style="margin-top:8px"></div><small class="n"><b>How to read:</b> every project is one row. Click a column heading to sort. <i>Edit</i> changes a row and <i>Delete</i> removes it. The search box filters the whole dashboard, and <i>all columns</i> shows all 27 headings.</small></div>
