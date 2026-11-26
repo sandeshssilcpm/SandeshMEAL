@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GWT Nepal | Monitoring and Evaluation Dashboard Portal</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f1f7f5;
+    color: #1f2937;
+}
+
+/* HEADER */
+
+header {
+    background: linear-gradient(135deg, #006747, #008f63);
+    color: white;
+    padding: 35px;
+    margin: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 80, 50, 0.15);
+}
+
+.header-label {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+header h1 {
+    font-size: 27px;
+    margin: 15px 0 10px;
+}
+
+header p {
+    font-size: 14px;
+    line-height: 1.8;
+    max-width: 900px;
+    color: #e2f5ed;
+}
+
+/* FILTERS */
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.filter-btn {
+    border: none;
+    padding: 11px 17px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.filter-btn.active {
+    background: white;
+    color: #006747;
+}
+
+.search-box {
+    margin-left: auto;
+    padding: 12px 17px;
+    border: none;
+    border-radius: 25px;
+    width: 260px;
+    max-width: 100%;
+    outline: none;
+}
+
+/* MAIN */
+
+main {
+    padding: 0 25px 35px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0 18px;
+    border-bottom: 1px solid #dce9e4;
+    padding-bottom: 12px;
+}
+
+.section-heading h2 {
+    font-size: 17px;
+    color: #145b46;
+    margin: 0;
+}
+
+.count {
+    background: #e0f5eb;
+    color: #08784e;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* DASHBOARD GRID */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    background: white;
+    border-radius: 15px;
+    padding: 22px;
+    border: 1px solid #e5eee9;
+    border-top: 4px solid #00966b;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,80,50,0.10);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-icon {
+    width: 45px;
+    height: 45px;
+    background: #e9f9f2;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+}
+
+.category {
+    background: #edf9f3;
+    color: #16835c;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.dashboard-card h3 {
+    font-size: 16px;
+    margin: 17px 0 8px;
+}
+
+.dashboard-card p {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0 0 20px;
+}
+
+.open-btn {
+    display: inline-block;
+    background: #00845a;
+    color: white;
+    text-decoration: none;
+    padding: 11px 15px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: auto;
+    align-self: flex-start;
+}
+
+.open-btn:hover {
+    background: #006747;
+}
+
+/* FOOTER */
+
+footer {
+    margin: 30px 25px 20px;
+    padding: 20px 0;
+    border-top: 1px solid #dce9e4;
+    text-align: center;
+    color: #718096;
+    font-size: 12px;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    header h1 {
+        font-size: 23px;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        margin: 15px;
+        padding: 25px 20px;
+    }
+
+    header h1 {
+        font-size: 21px;
+        line-height: 1.4;
+    }
+
+    main {
+        padding: 0 15px 25px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .dashboard-card {
+        min-height: 210px;
+    }
+
+    .search-box {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .controls {
+        align-items: stretch;
+    }
+
+    .filter-btn {
+        flex: 1;
+    }
+
+    footer {
+        margin: 20px 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <span class="header-label">
+        MONITORING, EVALUATION &amp; LEARNING
+    </span>
+
+    <h1>
+        GWT Nepal – Monitoring and Evaluation Dashboard Portal
+    </h1>
+
+    <p>
+        Welcome to the GWT Nepal Monitoring and Evaluation Dashboard Portal.
+        This central platform provides access to monitoring, evaluation and
+        project information across GWT Nepal's Community Aid programmes.
+        Select a dashboard below to explore project data and progress.
+    </p>
+
+    <div class="controls">
+
+        <button class="filter-btn active"
+                onclick="filterDashboards('all', this)">
+            All Dashboards (8)
+        </button>
+
+        <button class="filter-btn"
+                onclick="filterDashboards('school', this)">
+            Schools &amp; MSE (4)
+        </button>
+
+        <button class="filter-btn"
+                onclick="filterDashboards('water', this)">
+            Water &amp; Community (4)
+        </button>
+
+        <input
+            type="search"
+            class="search-box"
+            id="searchInput"
+            placeholder="🔍 Filter dashboards..."
+            oninput="searchDashboards()">
+
+    </div>
+
+</header>
+
+<main>
+
+    <!-- SCHOOLS SECTION -->
+
+    <section class="dashboard-section" data-section="school">
+
+        <div class="section-heading">
+            <h2>🎓 Schools &amp; Monitoring Tools</h2>
+            <span class="count">4 Dashboards</span>
+        </div>
+
+        <div class="dashboard-grid">
+
+            <article class="dashboard-card"
+                     data-category="school"
+                     data-name="school survey dashboard">
+
+                <div class="card-top">
+                    <div class="card-icon">🏫</div>
+                    <span class="category">Outcomes</span>
+                </div>
+
+                <h3>School Survey Dashboard</h3>
+
+                <p>
+                    Baseline, endline and outcome monitoring of schools.
+                </p>
+
+                <a class="open-btn" href="mschoolsurveydashboard/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="school"
+                     data-name="major school project">
+
+                <div class="card-top">
+                    <div class="card-icon">🏢</div>
+                    <span class="category">Infrastructure</span>
+                </div>
+
+                <h3>Major School Project</h3>
+
+                <p>
+                    Major school construction and project monitoring.
+                </p>
+
+                <a class="open-btn" href="major-school/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="school"
+                     data-name="minor school extension">
+
+                <div class="card-top">
+                    <div class="card-icon">📚</div>
+                    <span class="category">Refurbishment</span>
+                </div>
+
+                <h3>Minor School Extension</h3>
+
+                <p>
+                    Minor school extension and refurbishment projects.
+                </p>
+
+                <a class="open-btn" href="minor-school-extension/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="school"
+                     data-name="mse kobo form explorer">
+
+                <div class="card-top">
+                    <div class="card-icon">📊</div>
+                    <span class="category">KoboToolbox</span>
+                </div>
+
+                <h3>MSE Kobo Form Explorer</h3>
+
+                <p>
+                    Explore school-level monitoring records, teacher and
+                    student responses, repeat-group data and satisfaction
+                    scores from the KoboToolbox monitoring questionnaire.
+                </p>
+
+                <a class="open-btn" href="MSEkoboformexplorer/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- WATER AND COMMUNITY SECTION -->
+
+    <section class="dashboard-section" data-section="water">
+
+        <div class="section-heading">
+            <h2>💧 Water, Community Aid &amp; Reporting</h2>
+            <span class="count">4 Dashboards</span>
+        </div>
+
+        <div class="dashboard-grid">
+
+            <article class="dashboard-card"
+                     data-category="water"
+                     data-name="community aid">
+
+                <div class="card-top">
+                    <div class="card-icon">👥</div>
+                    <span class="category">Programme</span>
+                </div>
+
+                <h3>Community Aid</h3>
+
+                <p>
+                    Community Aid projects, activities and expenditure.
+                </p>
+
+                <a class="open-btn" href="community-aid/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="water"
+                     data-name="mse report generator">
+
+                <div class="card-top">
+                    <div class="card-icon">📝</div>
+                    <span class="category">Reports</span>
+                </div>
+
+                <h3>MSE Report Generator</h3>
+
+                <p>
+                    Upload the 20-school baseline and endline workbook,
+                    view weighted scores, and generate school reports.
+                </p>
+
+                <a class="open-btn" href="MSEreportgenerate/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="water"
+                     data-name="water projects">
+
+                <div class="card-top">
+                    <div class="card-icon">💧</div>
+                    <span class="category">WASH</span>
+                </div>
+
+                <h3>Water Projects</h3>
+
+                <p>
+                    Water supply, household access and sustainability.
+                </p>
+
+                <a class="open-btn" href="water-projects/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="water"
+                     data-name="water digitalisation record">
+
+                <div class="card-top">
+                    <div class="card-icon">🌊</div>
+                    <span class="category">Digital Records</span>
+                </div>
+
+                <h3>Water Digitalisation Record</h3>
+
+                <p>
+                    Digital water project records, monitoring data
+                    and project information.
+                </p>
+
+                <a class="open-btn" href="WaterDigitalisationRecord/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+    GWT Nepal | Monitoring, Evaluation &amp; Learning
+    <br><br>
+    Evidence • Accountability • Sustainable Impacts
+</footer>
+
+
+<script>
+let selectedCategory = "all";
+
+function applyDashboardFilters() {
+    const searchText = document.getElementById("searchInput").value.trim().toLowerCase();
+    const cards = document.querySelectorAll(".dashboard-card");
+    const sections = document.querySelectorAll(".dashboard-section");
+
+    cards.forEach(card => {
+        const categoryMatches =
+            selectedCategory === "all" ||
+            card.dataset.category === selectedCategory;
+
+        const searchableText =
+            (card.dataset.name + " " + card.querySelector("h3").innerText + " " +
+             card.querySelector("p").innerText).toLowerCase();
+
+        const searchMatches = searchableText.includes(searchText);
+        card.style.display = categoryMatches && searchMatches ? "flex" : "none";
+    });
+
+    sections.forEach(section => {
+        const visibleCards = Array.from(section.querySelectorAll(".dashboard-card"))
+            .some(card => card.style.display !== "none");
+        section.style.display = visibleCards ? "block" : "none";
+    });
+}
+
+function filterDashboards(category, button) {
+    selectedCategory = category;
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.toggle("active", btn === button);
+    });
+
+    applyDashboardFilters();
+}
+
+function searchDashboards() {
+    applyDashboardFilters();
+}
+</script>
+
+</body>
+</html>
