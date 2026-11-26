@@ -1,501 +1,639 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GWT Nepal | M&amp;E Dashboard Portal</title>
-  <style>
-    :root {
-      --emerald-900: #064e3b;
-      --emerald-700: #007E51;
-      --emerald-600: #005C3B;
-      --emerald-100: #d1fae5;
-      --emerald-050: #ecfdf5;
-      --slate-900: #0f172a;
-      --slate-700: #334155;
-      --slate-500: #64748b;
-      --bg-page: #f4f7f6;
-      --surface: #ffffff;
-      --border: #dcebe4;
-      --shadow-sm: 0 4px 14px rgba(6, 78, 59, 0.05);
-      --shadow-lg: 0 16px 32px rgba(0, 126, 81, 0.14);
-      --radius: 16px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GWT Nepal | Monitoring and Evaluation Dashboard Portal</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f1f7f5;
+    color: #1f2937;
+}
+
+/* HEADER */
+
+header {
+    background: linear-gradient(135deg, #006747, #008f63);
+    color: white;
+    padding: 35px;
+    margin: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 80, 50, 0.15);
+}
+
+.header-label {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+header h1 {
+    font-size: 27px;
+    margin: 15px 0 10px;
+}
+
+header p {
+    font-size: 14px;
+    line-height: 1.8;
+    max-width: 900px;
+    color: #e2f5ed;
+}
+
+/* FILTERS */
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.filter-btn {
+    border: none;
+    padding: 11px 17px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.filter-btn.active {
+    background: white;
+    color: #006747;
+}
+
+.search-box {
+    margin-left: auto;
+    padding: 12px 17px;
+    border: none;
+    border-radius: 25px;
+    width: 260px;
+    max-width: 100%;
+    outline: none;
+}
+
+/* MAIN */
+
+main {
+    padding: 0 25px 35px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0 18px;
+    border-bottom: 1px solid #dce9e4;
+    padding-bottom: 12px;
+}
+
+.section-heading h2 {
+    font-size: 17px;
+    color: #145b46;
+    margin: 0;
+}
+
+.count {
+    background: #e0f5eb;
+    color: #08784e;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* DASHBOARD GRID */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    background: white;
+    border-radius: 15px;
+    padding: 22px;
+    border: 1px solid #e5eee9;
+    border-top: 4px solid #00966b;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,80,50,0.10);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-icon {
+    width: 45px;
+    height: 45px;
+    background: #e9f9f2;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+}
+
+.category {
+    background: #edf9f3;
+    color: #16835c;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.dashboard-card h3 {
+    font-size: 16px;
+    margin: 17px 0 8px;
+}
+
+.dashboard-card p {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0 0 20px;
+}
+
+.open-btn {
+    display: inline-block;
+    background: #00845a;
+    color: white;
+    text-decoration: none;
+    padding: 11px 15px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: auto;
+    align-self: flex-start;
+}
+
+.open-btn:hover {
+    background: #006747;
+}
+
+/* FOOTER */
+
+footer {
+    margin: 30px 25px 20px;
+    padding: 20px 0;
+    border-top: 1px solid #dce9e4;
+    text-align: center;
+    color: #718096;
+    font-size: 12px;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    * {
-      box-sizing: border-box;
+    header h1 {
+        font-size: 23px;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        margin: 15px;
+        padding: 25px 20px;
     }
 
-    body {
-      margin: 0;
-      font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background:
-        radial-gradient(circle at 90% 8%, rgba(0, 126, 81, 0.08), transparent 42%),
-        radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.07), transparent 38%),
-        var(--bg-page);
-      color: var(--slate-900);
-      min-height: 100vh;
+    header h1 {
+        font-size: 21px;
+        line-height: 1.4;
     }
 
-    .container {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 36px 32px 48px;
+    main {
+        padding: 0 15px 25px;
     }
 
-    /* Hero Header */
-    .hero {
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, var(--emerald-900) 0%, var(--emerald-700) 62%, #0d9466 100%);
-      color: #ffffff;
-      border-radius: 22px;
-      padding: 38px 40px;
-      margin-bottom: 34px;
-      box-shadow: 0 14px 30px rgba(6, 78, 59, 0.16);
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
 
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: -60px;
-      bottom: -70px;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.07);
-      pointer-events: none;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 255, 255, 0.24);
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 12.5px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    .hero h1 {
-      margin: 0 0 12px;
-      font-size: clamp(24px, 3vw, 36px);
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
-    }
-
-    .hero p {
-      margin: 0 0 24px;
-      max-width: 820px;
-      font-size: 16px;
-      line-height: 1.7;
-      color: rgba(255, 255, 255, 0.92);
-    }
-
-    .hero-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .filter-btn {
-      background: rgba(255, 255, 255, 0.12);
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      padding: 9px 16px;
-      border-radius: 999px;
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .filter-btn:hover,
-    .filter-btn.active {
-      background: #ffffff;
-      color: var(--emerald-900);
-      border-color: #ffffff;
+    .dashboard-card {
+        min-height: 210px;
     }
 
     .search-box {
-      margin-left: auto;
-      background: rgba(255, 255, 255, 0.96);
-      border-radius: 999px;
-      padding: 4px 16px;
-      display: flex;
-      align-items: center;
-      min-width: 250px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    }
-
-    .search-box input {
-      border: none;
-      outline: none;
-      background: transparent;
-      width: 100%;
-      padding: 7px 6px;
-      font-size: 14px;
-      color: var(--slate-900);
-    }
-
-    /* Section Headings */
-    .section-block {
-      margin-bottom: 36px;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .section-title {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--emerald-900);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .section-count {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--emerald-700);
-      background: var(--emerald-050);
-      border: 1px solid var(--emerald-100);
-      padding: 4px 11px;
-      border-radius: 999px;
-    }
-
-    /* Cards Grid */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 22px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 26px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      min-height: 270px;
-      position: relative;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 4px;
-      border-radius: var(--radius) var(--radius) 0 0;
-      background: linear-gradient(90deg, var(--emerald-700), #10b981);
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-lg);
-      border-color: #9fd4bc;
-    }
-
-    .card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-    }
-
-    .icon-wrap {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      background: var(--emerald-050);
-      border: 1px solid var(--emerald-100);
-      display: grid;
-      place-items: center;
-      font-size: 26px;
-    }
-
-    .tag {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--emerald-700);
-      background: var(--emerald-050);
-      padding: 4px 10px;
-      border-radius: 999px;
-    }
-
-    .card h2 {
-      margin: 0 0 10px;
-      font-size: 19px;
-      font-weight: 700;
-      color: var(--slate-900);
-      line-height: 1.3;
-    }
-
-    .card p {
-      margin: 0 0 24px;
-      font-size: 14.5px;
-      line-height: 1.65;
-      color: var(--slate-500);
-    }
-
-    .card a {
-      margin-top: auto;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: fit-content;
-      background: var(--emerald-700);
-      color: #ffffff;
-      text-decoration: none;
-      padding: 11px 18px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      transition: background-color 0.2s ease, transform 0.2s ease;
-    }
-
-    .card a:hover {
-      background: var(--emerald-600);
-      transform: translateX(2px);
-    }
-
-    .empty-state {
-      display: none;
-      text-align: center;
-      padding: 44px 20px;
-      background: var(--surface);
-      border: 1px dashed var(--border);
-      border-radius: var(--radius);
-      color: var(--slate-500);
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 48px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      color: var(--slate-500);
-      font-size: 13.5px;
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 20px 18px 36px;
-      }
-      .hero {
-        padding: 26px 22px;
-      }
-      .search-box {
-        margin-left: 0;
         width: 100%;
-      }
+        margin-left: 0;
     }
-  </style>
+
+    .controls {
+        align-items: stretch;
+    }
+
+    .filter-btn {
+        flex: 1;
+    }
+
+    footer {
+        margin: 20px 15px;
+    }
+}
+</style>
 </head>
+
 <body>
-  <div class="container">
-    <header class="hero">
-      <div class="hero-badge">Monitoring, Evaluation &amp; Learning</div>
-      <h1>GWT Nepal – Monitoring and Evaluation Dashboard Portal</h1>
-      <p>
+
+<header>
+
+    <span class="header-label">
+        MONITORING, EVALUATION &amp; LEARNING
+    </span>
+
+    <h1>
+        GWT Nepal – Monitoring and Evaluation Dashboard Portal
+    </h1>
+
+    <p>
         Welcome to the GWT Nepal Monitoring and Evaluation Dashboard Portal.
-        This central platform provides access to monitoring, evaluation
-        and project information across GWT Nepal's Community Aid programmes.
+        This central platform provides access to monitoring, evaluation and
+        project information across GWT Nepal's Community Aid programmes.
         Select a dashboard below to explore project data and progress.
-      </p>
+    </p>
 
-      <div class="hero-controls">
-        <button type="button" class="filter-btn active" data-filter="all">All Dashboards (8)</button>
-        <button type="button" class="filter-btn" data-filter="schools">Schools &amp; MSE (4)</button>
-        <button type="button" class="filter-btn" data-filter="water-community">Water &amp; Community (4)</button>
+    <div class="controls">
 
-        <label class="search-box" aria-label="Search dashboards">
-          <span>🔍</span>
-          <input id="dashboardSearch" type="search" placeholder="Filter dashboards..." />
-        </label>
-      </div>
-    </header>
+        <button class="filter-btn active"
+                onclick="filterDashboards('all', this)">
+            All Dashboards (8)
+        </button>
 
-    <section class="section-block" data-group="schools">
-      <div class="section-header">
-        <h2 class="section-title">🎓 Schools &amp; Monitoring Tools</h2>
-        <span class="section-count">4 Dashboards</span>
-      </div>
+        <button class="filter-btn"
+                onclick="filterDashboards('school', this)">
+            Schools &amp; MSE (4)
+        </button>
 
-      <div class="grid">
-        <article class="card" data-category="schools">
-          <div class="card-top">
-            <div class="icon-wrap">🏫</div>
-            <span class="tag">Outcomes</span>
-          </div>
-          <h2>School Survey Dashboard</h2>
-          <p>Baseline, endline and outcome monitoring of schools.</p>
-          <a href="https://sandeshssilcpm.github.io/mschoolsurveydashboard/" target="_blank" rel="noopener noreferrer">Open Dashboard →</a>
-        </article>
+        <button class="filter-btn"
+                onclick="filterDashboards('water', this)">
+            Water &amp; Community (4)
+        </button>
 
-        <article class="card" data-category="schools">
-          <div class="card-top">
-            <div class="icon-wrap">🏢</div>
-            <span class="tag">Infrastructure</span>
-          </div>
-          <h2>Major School Project</h2>
-          <p>Major school construction and project monitoring.</p>
-          <a href="https://sandeshssilcpm.github.io/major-school/" target="_blank" rel="noopener noreferrer">Open Dashboard →</a>
-        </article>
+        <input
+            type="search"
+            class="search-box"
+            id="searchInput"
+            placeholder="🔍 Filter dashboards..."
+            oninput="searchDashboards()">
 
-        <article class="card" data-category="schools">
-          <div class="card-top">
-            <div class="icon-wrap">📚</div>
-            <span class="tag">Refurbishment</span>
-          </div>
-          <h2>Minor School Extension</h2>
-          <p>Minor school extension and refurbishment projects.</p>
-          <a href="https://sandeshssilcpm.github.io/minor-school-extension/" target="_blank" rel="noopener noreferrer">Open Dashboard →</a>
-        </article>
-
-        <article class="card" data-category="schools">
-          <div class="card-top">
-            <div class="icon-wrap">📊</div>
-            <span class="tag">KoboToolbox</span>
-          </div>
-          <h2>MSE Kobo Form Explorer</h2>
-          <p>
-            Explore school-level monitoring records, teacher and student
-            responses, repeat-group data and satisfaction scores from
-            the KoboToolbox monitoring questionnaire.
-          </p>
-          <a href="https://sandeshssilcpm.github.io/MSEkoboformexplorer/" target="_blank" rel="noopener noreferrer">Open Dashboard →</a>
-        </article>
-      </div>
-    </section>
-
-    <section class="section-block" data-group="water-community">
-      <div class="section-header">
-        <h2 class="section-title">💧 Water, Community Aid &amp; Reporting</h2>
-        <span class="section-count">4 Dashboards</span>
-      </div>
-
-      <div class="grid">
-        <article class="card" data-category="water-community">
-          <div class="card-top">
-            <div class="icon-wrap">👥</div>
-            <span class="tag">Programme</span>
-          </div>
-          <h2>Community Aid</h2>
-          <p>Community Aid projects, activities and expenditure.</p>
-          <a href="https://sandeshssilcpm.github.io/community-aid/" target="_blank" rel="noopener noreferrer">Open Dashboard →</a>
-        </article>
-
-        <article class="card" data-category="water-community">
-          <div class="card-top">
-            <div class="icon-wrap">📝</div>
-            <span class="tag">Reports</span>
-          </div>
-          <h2>MSE Report Generator</h2>
-          <p>
-            Upload the 20-school baseline and endline workbook, view
-            weighted scores, and generate school baseline reports
-            in Word.
-          </p>
-          <a href="https://sandeshssilcpm.github.io/MSEreportgenerate/" target="_blank" rel="noopener noreferrer">Open Dashboard →</a>
-        </article>
-
-        <article class="card" data-category="water-community">
-          <div class="card-top">
-            <div class="icon-wrap">💧</div>
-            <span class="tag">WASH</span>
-          </div>
-          <h2>Water Projects</h2>
-          <p>Water supply, household access and sustainability.</p>
-          <a href="https://sandeshssilcpm.github.io/water-projects/" target="_blank" rel="noopener noreferrer">Open Dashboard →</a>
-        </article>
-
-        <article class="card" data-category="water-community">
-          <div class="card-top">
-            <div class="icon-wrap">🌊</div>
-            <span class="tag">Digital Records</span>
-          </div>
-          <h2>Water Digitalisation Record</h2>
-          <p>Digital water project records, monitoring data and project information.</p>
-          <a href="https://sandeshssilcpm.github.io/WaterDigitalisationRecord/" target="_blank" rel="noopener noreferrer">Open Dashboard →</a>
-        </article>
-      </div>
-    </section>
-
-    <div id="emptyState" class="empty-state">
-      No dashboards match your current filter. Try clearing the search box or selecting "All Dashboards".
     </div>
 
-    <footer class="footer">
-      Gurkha Welfare Trust Nepal | Monitoring, Evaluation and Learning
-    </footer>
-  </div>
+</header>
 
-  <script>
-    const filterButtons = document.querySelectorAll(".filter-btn");
-    const searchInput = document.getElementById("dashboardSearch");
-    const cards = document.querySelectorAll(".card");
-    const sections = document.querySelectorAll(".section-block");
-    const emptyState = document.getElementById("emptyState");
+<main>
 
-    let activeFilter = "all";
+    <!-- SCHOOLS SECTION -->
 
-    function applyFilters() {
-      const query = searchInput.value.trim().toLowerCase();
-      let totalVisible = 0;
+    <section class="dashboard-section" data-section="school">
 
-      cards.forEach((card) => {
-        const category = card.dataset.category;
-        const text = card.textContent.toLowerCase();
-        const matchesCategory = activeFilter === "all" || category === activeFilter;
-        const matchesQuery = !query || text.includes(query);
-        const show = matchesCategory && matchesQuery;
+        <div class="section-heading">
+            <h2>🎓 Schools &amp; Monitoring Tools</h2>
+            <span class="count">4 Dashboards</span>
+        </div>
 
-        card.style.display = show ? "flex" : "none";
-        if (show) totalVisible += 1;
-      });
+        <div class="dashboard-grid">
 
-      sections.forEach((section) => {
-        const visibleInSection = [...section.querySelectorAll(".card")].some(
-          (c) => c.style.display !== "none"
-        );
-        section.style.display = visibleInSection ? "block" : "none";
-      });
+            <article class="dashboard-card"
+                     data-category="school"
+                     data-name="school survey dashboard">
 
-      emptyState.style.display = totalVisible === 0 ? "block" : "none";
-    }
+                <div class="card-top">
+                    <div class="card-icon">🏫</div>
+                    <span class="category">Outcomes</span>
+                </div>
 
-    filterButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        filterButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        activeFilter = btn.dataset.filter;
-        applyFilters();
-      });
+                <h3>School Survey Dashboard</h3>
+
+                <p>
+                    Baseline, endline and outcome monitoring of schools.
+                </p>
+
+                <a class="open-btn"
+                   href="/sandeshssilcpm.io/school-survey-dashboard/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="school"
+                     data-name="major school project">
+
+                <div class="card-top">
+                    <div class="card-icon">🏢</div>
+                    <span class="category">Infrastructure</span>
+                </div>
+
+                <h3>Major School Project</h3>
+
+                <p>
+                    Major school construction and project monitoring.
+                </p>
+
+                <a class="open-btn"
+                   href="/sandeshssilcpm.io/major-school-project/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="school"
+                     data-name="minor school extension">
+
+                <div class="card-top">
+                    <div class="card-icon">📚</div>
+                    <span class="category">Refurbishment</span>
+                </div>
+
+                <h3>Minor School Extension</h3>
+
+                <p>
+                    Minor school extension and refurbishment projects.
+                </p>
+
+                <a class="open-btn"
+                   href="/sandeshssilcpm.io/minor-school-extension/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="school"
+                     data-name="mse kobo form explorer">
+
+                <div class="card-top">
+                    <div class="card-icon">📊</div>
+                    <span class="category">KoboToolbox</span>
+                </div>
+
+                <h3>MSE Kobo Form Explorer</h3>
+
+                <p>
+                    Explore school-level monitoring records, teacher and
+                    student responses, repeat-group data and satisfaction
+                    scores from the KoboToolbox monitoring questionnaire.
+                </p>
+
+                <a class="open-btn"
+                   href="/sandeshssilcpm.io/MSEkoboformexplorer/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- WATER AND COMMUNITY SECTION -->
+
+    <section class="dashboard-section" data-section="water">
+
+        <div class="section-heading">
+            <h2>💧 Water, Community Aid &amp; Reporting</h2>
+            <span class="count">4 Dashboards</span>
+        </div>
+
+        <div class="dashboard-grid">
+
+            <article class="dashboard-card"
+                     data-category="water"
+                     data-name="community aid">
+
+                <div class="card-top">
+                    <div class="card-icon">👥</div>
+                    <span class="category">Programme</span>
+                </div>
+
+                <h3>Community Aid</h3>
+
+                <p>
+                    Community Aid projects, activities and expenditure.
+                </p>
+
+                <a class="open-btn"
+                   href="/sandeshssilcpm.io/community-aid/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="water"
+                     data-name="mse report generator">
+
+                <div class="card-top">
+                    <div class="card-icon">📝</div>
+                    <span class="category">Reports</span>
+                </div>
+
+                <h3>MSE Report Generator</h3>
+
+                <p>
+                    Upload the 20-school baseline and endline workbook,
+                    view weighted scores, and generate school reports.
+                </p>
+
+                <a class="open-btn"
+                   href="/sandeshssilcpm.io/mse-report-generator/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="water"
+                     data-name="water projects">
+
+                <div class="card-top">
+                    <div class="card-icon">💧</div>
+                    <span class="category">WASH</span>
+                </div>
+
+                <h3>Water Projects</h3>
+
+                <p>
+                    Water supply, household access and sustainability.
+                </p>
+
+                <a class="open-btn"
+                   href="/sandeshssilcpm.io/water-projects/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-card"
+                     data-category="water"
+                     data-name="water digitalisation record">
+
+                <div class="card-top">
+                    <div class="card-icon">🌊</div>
+                    <span class="category">Digital Records</span>
+                </div>
+
+                <h3>Water Digitalisation Record</h3>
+
+                <p>
+                    Digital water project records, monitoring data
+                    and project information.
+                </p>
+
+                <a class="open-btn"
+                   href="/sandeshssilcpm.io/WaterDigitalisationRecord/">
+                    Open Dashboard →
+                </a>
+
+            </article>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+    GWT Nepal | Monitoring, Evaluation &amp; Learning
+    <br><br>
+    Evidence • Accountability • Sustainable Impact
+</footer>
+
+
+<script>
+
+/* FILTER DASHBOARDS */
+
+function filterDashboards(category, button) {
+
+    const cards = document.querySelectorAll(".dashboard-card");
+    const sections = document.querySelectorAll(".dashboard-section");
+    const buttons = document.querySelectorAll(".filter-btn");
+
+    buttons.forEach(btn => {
+        btn.classList.remove("active");
     });
 
-    searchInput.addEventListener("input", applyFilters);
-  </script>
+    button.classList.add("active");
+
+    cards.forEach(card => {
+
+        if (category === "all" ||
+            card.dataset.category === category) {
+
+            card.style.display = "flex";
+
+        } else {
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+    sections.forEach(section => {
+
+        const visibleCards = section.querySelectorAll(
+            '.dashboard-card[style*="flex"]'
+        );
+
+        section.style.display =
+            category === "all" ||
+            section.dataset.section === category
+            ? "block"
+            : "none";
+
+    });
+
+}
+
+
+/* SEARCH DASHBOARDS */
+
+function searchDashboards() {
+
+    const searchText = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    const cards = document.querySelectorAll(".dashboard-card");
+    const sections = document.querySelectorAll(".dashboard-section");
+
+    cards.forEach(card => {
+
+        const name = card.dataset.name.toLowerCase();
+        const title = card.querySelector("h3").innerText.toLowerCase();
+
+        if (name.includes(searchText) ||
+            title.includes(searchText)) {
+
+            card.style.display = "flex";
+
+        } else {
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+    sections.forEach(section => {
+
+        const visibleCards = Array.from(
+            section.querySelectorAll(".dashboard-card")
+        ).filter(card => card.style.display !== "none");
+
+        section.style.display =
+            visibleCards.length > 0 ? "block" : "none";
+
+    });
+
+}
+
+</script>
+
 </body>
 </html>
