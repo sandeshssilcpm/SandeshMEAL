@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +19,7 @@ body {
 }
 
 /* HEADER */
+
 header {
     background: linear-gradient(135deg, #006747, #008f63);
     color: white;
@@ -52,6 +52,7 @@ header p {
 }
 
 /* FILTERS */
+
 .controls {
     display: flex;
     flex-wrap: wrap;
@@ -87,6 +88,7 @@ header p {
 }
 
 /* MAIN */
+
 main {
     padding: 0 25px 35px;
 }
@@ -116,6 +118,7 @@ main {
 }
 
 /* DASHBOARD GRID */
+
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -196,6 +199,7 @@ main {
 }
 
 /* FOOTER */
+
 footer {
     margin: 30px 25px 20px;
     padding: 20px 0;
@@ -205,7 +209,8 @@ footer {
     font-size: 12px;
 }
 
-/* TABLET */
+/* MOBILE */
+
 @media (max-width: 900px) {
     .dashboard-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -216,7 +221,6 @@ footer {
     }
 }
 
-/* MOBILE */
 @media (max-width: 600px) {
     header {
         margin: 15px;
@@ -337,11 +341,12 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="./mschoolsurveydashboard/">
+                   href="https://sandeshssilcpm.github.io/SandeshMEAL/mschoolsurveydashboard/">
                     Open Dashboard →
                 </a>
 
             </article>
+
 
             <article class="dashboard-card"
                      data-category="school"
@@ -359,11 +364,12 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="./major-school/">
+                   href="https://sandeshssilcpm.github.io/SandeshMEAL/major-school/">
                     Open Dashboard →
                 </a>
 
             </article>
+
 
             <article class="dashboard-card"
                      data-category="school"
@@ -381,11 +387,12 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="./minor-school-extension/">
+                   href="https://sandeshssilcpm.github.io/SandeshMEAL/minor-school-extension/">
                     Open Dashboard →
                 </a>
 
             </article>
+
 
             <article class="dashboard-card"
                      data-category="school"
@@ -405,7 +412,7 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="./MSEkoboformexplorer/">
+                   href="https://sandeshssilcpm.github.io/SandeshMEAL/MSEkoboformexplorer/">
                     Open Dashboard →
                 </a>
 
@@ -414,6 +421,7 @@ footer {
         </div>
 
     </section>
+
 
     <!-- WATER AND COMMUNITY SECTION -->
 
@@ -442,11 +450,12 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="./community-aid/">
+                   href="https://sandeshssilcpm.github.io/SandeshMEAL/community-aid/">
                     Open Dashboard →
                 </a>
 
             </article>
+
 
             <article class="dashboard-card"
                      data-category="water"
@@ -465,11 +474,12 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="./MSEreportgenerate/">
+                   href="https://sandeshssilcpm.github.io/SandeshMEAL/MSEreportgenerate/">
                     Open Dashboard →
                 </a>
 
             </article>
+
 
             <article class="dashboard-card"
                      data-category="water"
@@ -487,11 +497,12 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="./water-projects/">
+                   href="https://sandeshssilcpm.github.io/SandeshMEAL/water-projects/">
                     Open Dashboard →
                 </a>
 
             </article>
+
 
             <article class="dashboard-card"
                      data-category="water"
@@ -510,7 +521,7 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="./WaterDigitalisationRecord/">
+                   href="https://sandeshssilcpm.github.io/SandeshMEAL/WaterDigitalisationRecord/">
                     Open Dashboard →
                 </a>
 
@@ -522,11 +533,13 @@ footer {
 
 </main>
 
+
 <footer>
     GWT Nepal | Monitoring, Evaluation &amp; Learning
     <br><br>
     Evidence • Accountability • Sustainable Impact
 </footer>
+
 
 <script>
 let selectedCategory = "all";
@@ -542,21 +555,16 @@ function applyDashboardFilters() {
             card.dataset.category === selectedCategory;
 
         const searchableText =
-            (card.dataset.name + " " +
-             card.querySelector("h3").innerText + " " +
+            (card.dataset.name + " " + card.querySelector("h3").innerText + " " +
              card.querySelector("p").innerText).toLowerCase();
 
         const searchMatches = searchableText.includes(searchText);
-
-        card.style.display =
-            categoryMatches && searchMatches ? "flex" : "none";
+        card.style.display = categoryMatches && searchMatches ? "flex" : "none";
     });
 
     sections.forEach(section => {
-        const visibleCards = Array.from(
-            section.querySelectorAll(".dashboard-card")
-        ).some(card => card.style.display !== "none");
-
+        const visibleCards = Array.from(section.querySelectorAll(".dashboard-card"))
+            .some(card => card.style.display !== "none");
         section.style.display = visibleCards ? "block" : "none";
     });
 }
