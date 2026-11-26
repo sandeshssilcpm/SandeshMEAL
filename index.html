@@ -20,7 +20,6 @@ body {
 }
 
 /* HEADER */
-
 header {
     background: linear-gradient(135deg, #006747, #008f63);
     color: white;
@@ -53,7 +52,6 @@ header p {
 }
 
 /* FILTERS */
-
 .controls {
     display: flex;
     flex-wrap: wrap;
@@ -89,7 +87,6 @@ header p {
 }
 
 /* MAIN */
-
 main {
     padding: 0 25px 35px;
 }
@@ -119,7 +116,6 @@ main {
 }
 
 /* DASHBOARD GRID */
-
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -200,7 +196,6 @@ main {
 }
 
 /* FOOTER */
-
 footer {
     margin: 30px 25px 20px;
     padding: 20px 0;
@@ -210,8 +205,7 @@ footer {
     font-size: 12px;
 }
 
-/* MOBILE */
-
+/* TABLET */
 @media (max-width: 900px) {
     .dashboard-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -222,6 +216,7 @@ footer {
     }
 }
 
+/* MOBILE */
 @media (max-width: 600px) {
     header {
         margin: 15px;
@@ -342,12 +337,11 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="/sandeshssilcpm.io/school-survey-dashboard/">
+                   href="./mschoolsurveydashboard/">
                     Open Dashboard →
                 </a>
 
             </article>
-
 
             <article class="dashboard-card"
                      data-category="school"
@@ -365,12 +359,11 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="/sandeshssilcpm.io/major-school-project/">
+                   href="./major-school/">
                     Open Dashboard →
                 </a>
 
             </article>
-
 
             <article class="dashboard-card"
                      data-category="school"
@@ -388,12 +381,11 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="/sandeshssilcpm.io/minor-school-extension/">
+                   href="./minor-school-extension/">
                     Open Dashboard →
                 </a>
 
             </article>
-
 
             <article class="dashboard-card"
                      data-category="school"
@@ -413,7 +405,7 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="/sandeshssilcpm.io/MSEkoboformexplorer/">
+                   href="./MSEkoboformexplorer/">
                     Open Dashboard →
                 </a>
 
@@ -422,7 +414,6 @@ footer {
         </div>
 
     </section>
-
 
     <!-- WATER AND COMMUNITY SECTION -->
 
@@ -451,12 +442,11 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="/sandeshssilcpm.io/community-aid/">
+                   href="./community-aid/">
                     Open Dashboard →
                 </a>
 
             </article>
-
 
             <article class="dashboard-card"
                      data-category="water"
@@ -475,12 +465,11 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="/sandeshssilcpm.io/mse-report-generator/">
+                   href="./MSEreportgenerate/">
                     Open Dashboard →
                 </a>
 
             </article>
-
 
             <article class="dashboard-card"
                      data-category="water"
@@ -498,12 +487,11 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="/sandeshssilcpm.io/water-projects/">
+                   href="./water-projects/">
                     Open Dashboard →
                 </a>
 
             </article>
-
 
             <article class="dashboard-card"
                      data-category="water"
@@ -522,7 +510,7 @@ footer {
                 </p>
 
                 <a class="open-btn"
-                   href="/sandeshssilcpm.io/WaterDigitalisationRecord/">
+                   href="./WaterDigitalisationRecord/">
                     Open Dashboard →
                 </a>
 
@@ -534,105 +522,58 @@ footer {
 
 </main>
 
-
 <footer>
     GWT Nepal | Monitoring, Evaluation &amp; Learning
     <br><br>
     Evidence • Accountability • Sustainable Impact
 </footer>
 
-
 <script>
+let selectedCategory = "all";
 
-/* FILTER DASHBOARDS */
-
-function filterDashboards(category, button) {
-
-    const cards = document.querySelectorAll(".dashboard-card");
-    const sections = document.querySelectorAll(".dashboard-section");
-    const buttons = document.querySelectorAll(".filter-btn");
-
-    buttons.forEach(btn => {
-        btn.classList.remove("active");
-    });
-
-    button.classList.add("active");
-
-    cards.forEach(card => {
-
-        if (category === "all" ||
-            card.dataset.category === category) {
-
-            card.style.display = "flex";
-
-        } else {
-
-            card.style.display = "none";
-
-        }
-
-    });
-
-    sections.forEach(section => {
-
-        const visibleCards = section.querySelectorAll(
-            '.dashboard-card[style*="flex"]'
-        );
-
-        section.style.display =
-            category === "all" ||
-            section.dataset.section === category
-            ? "block"
-            : "none";
-
-    });
-
-}
-
-
-/* SEARCH DASHBOARDS */
-
-function searchDashboards() {
-
-    const searchText = document
-        .getElementById("searchInput")
-        .value
-        .toLowerCase();
-
+function applyDashboardFilters() {
+    const searchText = document.getElementById("searchInput").value.trim().toLowerCase();
     const cards = document.querySelectorAll(".dashboard-card");
     const sections = document.querySelectorAll(".dashboard-section");
 
     cards.forEach(card => {
+        const categoryMatches =
+            selectedCategory === "all" ||
+            card.dataset.category === selectedCategory;
 
-        const name = card.dataset.name.toLowerCase();
-        const title = card.querySelector("h3").innerText.toLowerCase();
+        const searchableText =
+            (card.dataset.name + " " +
+             card.querySelector("h3").innerText + " " +
+             card.querySelector("p").innerText).toLowerCase();
 
-        if (name.includes(searchText) ||
-            title.includes(searchText)) {
+        const searchMatches = searchableText.includes(searchText);
 
-            card.style.display = "flex";
-
-        } else {
-
-            card.style.display = "none";
-
-        }
-
+        card.style.display =
+            categoryMatches && searchMatches ? "flex" : "none";
     });
 
     sections.forEach(section => {
-
         const visibleCards = Array.from(
             section.querySelectorAll(".dashboard-card")
-        ).filter(card => card.style.display !== "none");
+        ).some(card => card.style.display !== "none");
 
-        section.style.display =
-            visibleCards.length > 0 ? "block" : "none";
-
+        section.style.display = visibleCards ? "block" : "none";
     });
-
 }
 
+function filterDashboards(category, button) {
+    selectedCategory = category;
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.toggle("active", btn === button);
+    });
+
+    applyDashboardFilters();
+}
+
+function searchDashboards() {
+    applyDashboardFilters();
+}
 </script>
 
 </body>
